@@ -10,350 +10,225 @@ public class AllisonEckhartScript : MonoBehaviour
     public KMBombInfo Bomb;
     public KMAudio Audio;
 
+    public TextMesh ScreenText;
+    public TextMesh InputText;
+
+    public KMSelectable Clear;
+    public KMSelectable Submit;
+    public KMSelectable[] NumberButtons;
+
     private int _moduleId;
     private static int _moduleIdCounter = 1;
     private bool _moduleSolved;
     private static bool alreadyRan = false;
     private static List<KMBombModule> _foundMods = new List<KMBombModule>();
-    private bool debugMode = true;
+    public bool debugMode = true;
+    public int debugNumber = 7;
     private int solution;
+    string brackettedPrompt;
+    List<string> promptIterations = new List<string>();
+    int solvedAllisonEckhartedModules = 0;
+
+    private int Solves;
+    private string MostRecent;
+    private List<string> SolveList = new List<string>{};
 
     private void Start()
     {
         _moduleId = _moduleIdCounter++;
+        Clear.OnInteract += delegate () { ClearPress(); return false; };
+
         GenerateAllisonEckhart();
-        //GeneratePrompt();
+        ScreenText.text = wordWrap(promptIterations[0], 32);
     }
 
-    public class EWNode {
-        public string Text;
-        public int? Value;
-        public EWNode[] Children;
+    private void Update()
+    {
+        if (!_moduleSolved)
+        {
+            Solves = Bomb.GetSolvedModuleIDs().Count();
+            if (Solves > SolveList.Count()) {
+                MostRecent = GetLatestSolve(Bomb.GetSolvedModuleIDs(), SolveList);
+                if (true /*_foundMods.Contains(MostRecent)*/)
+                {
+                    
+                }
+            }
+        }
+    }
 
-        public EWNode(string text, int? value, EWNode[] children) {
-            Text = text ?? "";
+    void ClearPress()
+    {
+        if (debugMode) {
+            solvedAllisonEckhartedModules++;
+            ScreenText.text = wordWrap(promptIterations[solvedAllisonEckhartedModules], 32);
+        }
+    }
+
+    public class AEPiece {
+        public string Text;
+        public int Value;
+
+        public AEPiece(string text, int value) {
+            Text = text;
             Value = value;
-            Children = children ?? new EWNode[] { };
         }
     }
 
     private void GeneratePrompt(int count) 
     {
-        int limit = count;
+        int allisoneckhartsremaining = count;
 
         string[] starts = "INPUT,COMPUTE,CALCULATE,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
-        int[] numbers = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90 };
-        string[] numberWords = "ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,TEN,ELEVEN,TWELVE,THIRTEEN,FOURTEEN,FIFTEEN,SIXTEEN,SEVENTEEN,EIGHTEEN,NINETEEN,TWENTY,THIRTY,FORTY,FIFTY,SIXTY,SEVENTY,EIGHTY,NINETY".Split(',');
-    
-        string promptText = starts.PickRandom();
-        List<int> promptValues = new List<int> {  };
 
-        //using this edgework for testing, before the edgework detection gets added: 
-        //1 mod (Allison Eckhart); 2in2 [par ser] [ser] [] #=J05ZD3
+        var pieces = new KeyValuePair<string, int>[]
+        {
+            new KeyValuePair<string, int>("ZERO", 0),
+            new KeyValuePair<string, int>("ONE", 1),
+            new KeyValuePair<string, int>("TWO", 2),
+            new KeyValuePair<string, int>("THREE", 3),
+            new KeyValuePair<string, int>("FOUR", 4),
+            new KeyValuePair<string, int>("FIVE", 5),
+            new KeyValuePair<string, int>("SIX", 6),
+            new KeyValuePair<string, int>("SEVEN", 7),
+            new KeyValuePair<string, int>("EIGHT", 8),
+            new KeyValuePair<string, int>("NINE", 9),
+            new KeyValuePair<string, int>("TEN", 10),
+            new KeyValuePair<string, int>("ELEVEN", 11),
+            new KeyValuePair<string, int>("TWELVE", 12),
+            new KeyValuePair<string, int>("THIRTEEN", 13),
+            new KeyValuePair<string, int>("FOURTEEN", 14),
+            new KeyValuePair<string, int>("FIFTEEN", 15),
+            new KeyValuePair<string, int>("SIXTEEN", 16),
+            new KeyValuePair<string, int>("SEVENTEEN", 17),
+            new KeyValuePair<string, int>("EIGHTEEN", 18),
+            new KeyValuePair<string, int>("NINETEEN", 19),
+            new KeyValuePair<string, int>("TWENTY", 20),
+            new KeyValuePair<string, int>("THIRTY", 30),
+            new KeyValuePair<string, int>("FORTY", 40),
+            new KeyValuePair<string, int>("FIFTY", 50),
+            new KeyValuePair<string, int>("SIXTY", 60),
+            new KeyValuePair<string, int>("SEVENTY", 70),
+            new KeyValuePair<string, int>("EIGHTY", 80),
+            new KeyValuePair<string, int>("NINETY", 90),
+            new KeyValuePair<string, int>("[MODULE] COUNT|NUMBER OF [MODULES]", Bomb.GetModuleIDs().Count()),
+            //distinct modules
+            //unique modules
+            new KeyValuePair<string, int>("[[REGULAR] MODULE] COUNT|NUMBER OF [[REGULAR] MODULES]|[[NON-NEEDY] MODULE] COUNT|NUMBER OF [[NON-NEEDY] MODULES]", Bomb.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[[NEEDY] MODULE] COUNT|NUMBER OF [[NEEDY] MODULES]", Bomb.GetModuleIDs().Count() - Bomb.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[BATTERY] COUNT|NUMBER OF [BATTERIES]", Bomb.GetBatteryCount()),
+            new KeyValuePair<string, int>("[BATTERY HOLDER] COUNT|NUMBER OF [BATTERY HOLDERS]", Bomb.GetBatteryHolderCount()),
+            new KeyValuePair<string, int>("[[AA] BATTERY] COUNT|NUMBER OF [[AA] BATTERIES]", Bomb.GetBatteryCount(Battery.AA)),
+            new KeyValuePair<string, int>("[[D] BATTERY] COUNT|NUMBER OF [[D] BATTERIES]", Bomb.GetBatteryCount(Battery.D)),
+            new KeyValuePair<string, int>("[INDICATOR] COUNT|NUMBER OF [INDICATORS]", Bomb.GetIndicators().Count()),
+            new KeyValuePair<string, int>("[[LIT] INDICATOR] COUNT|NUMBER OF [[LIT] INDICATORS]", Bomb.GetOnIndicators().Count()),
+            new KeyValuePair<string, int>("[[UNLIT] INDICATOR] COUNT|NUMBER OF [[UNLIT] INDICATORS]", Bomb.GetOffIndicators().Count()),
+            //new KeyValuePair<string, int>("NUMBER OF [INDICATORS CONTAINING A VOWEL]", Bomb.GetIndicators().Select(i => i.Intersect("AEIOU").Any())),
+            //new KeyValuePair<string, int>("NUMBER OF [[LIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOnIndicators().Select(i => i.Intersect("AEIOU").Any())),
+            //new KeyValuePair<string, int>("NUMBER OF [[UNLIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOffIndicators().Select(i => i.Intersect("AEIOU").Any())),
+            //sum of characters in indicators
+            new KeyValuePair<string, int>("[PORT] COUNT|NUMBER OF [PORTS]", Bomb.GetPortCount()),
+            new KeyValuePair<string, int>("[PORT PLATE] COUNT|NUMBER OF [PORT PLATES]", Bomb.GetPortPlateCount()),
+            //empty port plate count
+            //non-empty port plate count
+            new KeyValuePair<string, int>("[[DVI-D] PORT] COUNT|NUMBER OF [[DVI-D] PORTS]", Bomb.GetPortCount(Port.DVI)),
+            new KeyValuePair<string, int>("[[PARALLEL] PORT] COUNT|NUMBER OF [[PARALLEL] PORTS]", Bomb.GetPortCount(Port.Parallel)),
+            new KeyValuePair<string, int>("[[PS/2] PORT] COUNT|NUMBER OF [[PS/2] PORTS]", Bomb.GetPortCount(Port.PS2)),
+            new KeyValuePair<string, int>("[[RJ-45] PORT] COUNT|NUMBER OF [[RJ-45] PORTS]", Bomb.GetPortCount(Port.RJ45)),
+            new KeyValuePair<string, int>("[[SERIAL] PORT] COUNT|NUMBER OF [[SERIAL] PORTS]", Bomb.GetPortCount(Port.Serial)),
+            new KeyValuePair<string, int>("[[STEREO RCA] PORT] COUNT|NUMBER OF [[STEREO RCA] PORTS]", Bomb.GetPortCount(Port.StereoRCA)),
+            new KeyValuePair<string, int>("[FIRST] SERIAL NUMBER [DIGIT]|[1ST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[0]),
+            new KeyValuePair<string, int>("[SECOND] SERIAL NUMBER [DIGIT]|[2ND] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[1]),
+            new KeyValuePair<string, int>("[LAST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
+            //there's more but honestly can't be fucked atm
+        };
 
-        int mods = 1; //Bomb.GetModuleIDs().Count();
-        int distMods = 1; //DistinctCount(Bomb.GetModuleIDs());
-        int uniqMods = 1; //UniqueCount(Bomb.GetModuleIDs());
-        int nonNeedys = 1; //Bomb.GetSolvableModuleIDs().Count();
-        int needys = 0; //modules - nonNeedyModules;
-
-        int bats = 2; //Bomb.GetBatteryCount();
-        int holders = 2; //Bomb.GetBatteryHolderCount();
-        int aaBats = 0; //Bomb.GetBatteryCount(KMBombInfoExtensions.KnownBatteryType.AA);
-        int dBats = 2; //Bomb.GetBatteryCount(KMBombInfoExtensions.KnownBatteryType.D);
-
-        int inds = 0; //Bomb.GetIndicators().Count();
-        int lits = 0; //Bomb.GetOnIndicators().Count();
-        int unlits = 0; //Bomb.GetOffIndicators().Count();
-        int vowelInds = 0; //Bomb.GetIndicators().Select(i => i.Intersect("AEIOU").Any());
-        int vowelLits = 0; //Bomb.GetOnIndicators().Select(i => i.Intersect("AEIOU").Any());
-        int vowelUnlits = 0; //Bomb.GetOffIndicators().Select(i => i.Intersect("AEIOU").Any());
-        int indLetterSum = 0;
-        int litLetterSum = 0;
-        int unlitLetterSum = 0;
-        int distIndLetterSum = 0;
-        int distLitLetterSum = 0;
-        int distUnlitLetterSum = 0;
-        int uniqIndLetterSum = 0;
-        int uniqLitLetterSum = 0;
-        int uniqUnlitLetterSum = 0;
-        int indVowelSum = 0;
-        int litVowelSum = 0;
-        int unlitVowelSum = 0;
-        int indConsonantSum = 0;
-        int litConsonantSum = 0;
-        int unlitConsonantSum = 0;
-
-        int ports = 3;
-        int distPorts = 2;
-        int uniqPorts = 1;
-        int plates = 3;
-        int emptyPlates = 1;
-        int nonEmptyPlates = 2;
-        int dvis = 0;
-        int parallels = 1;
-        int ps2s = 0;
-        int rj45s = 0;
-        int serials = 2;
-        int rcas = 0;
-
-        int firstSnDigit = 0;
-        int secondSnDigit = 5;
-        int? thirdSnDigit = 3;
-        int lastSnDigit = 3;
-        int firstSnLetter = 10;
-        int secondSnLetter = 26;
-        int? thirdSnLetter = 4;
-        int lastSnLetter = 4;
-        int? firstSnChar = null;
-        int? secondSnChar = 0;
-        int thirdSnChar = 5;
-        int lastSnChar = 3;
-        int snLetters = 3;
-        int snDigits = 3;
-        int snVowels = 0;
-        int snConsonants = 3;
-        int snEvens = 1;
-        int snOdds = 2;
-        int snDigitSum = 8;
-        int snDistDigitSum = 8;
-        int snUniqDigitSum = 8;
-        int snEvenSum = 0;
-        int snOddSum = 8;
-        int snLetterSum = 40;
-        int snDistLetterSum = 40;
-        int snUniqLetterSum = 40;
-        int snVowelSum = 0;
-        int snConsonantSum = 40;
-
-        EWNode aaa = new EWNode ("[[[AA] BATTERY] COUNT]", aaBats, null);
-        EWNode aab = new EWNode ("[[[D] BATTERY] COUNT]", dBats, null);
-        EWNode aba = new EWNode ("[[[LIT] INDICATOR] COUNT]", lits, null);
-        EWNode abb = new EWNode ("[[[UNLIT] INDICATOR] COUNT]", unlits, null);
-        EWNode aca = new EWNode ("[[[DISTINCT] MODULE] COUNT]", distMods, null);
-        EWNode acb = new EWNode ("[[[NEEDY] MODULE] COUNT]", needys, null);
-        EWNode acc = new EWNode ("[[[NON-NEEDY] MODULE] COUNT]", nonNeedys, null);
-        EWNode acd = new EWNode ("[[[UNIQUE] MODULE] COUNT]", uniqMods, null);
-        EWNode ada = new EWNode ("[[[DISTINCT] PORT] COUNT]", distPorts, null);
-        EWNode adb = new EWNode ("[[[DVI-D] PORT] COUNT]", dvis, null);
-        EWNode adc = new EWNode ("[[[PARALLEL] PORT] COUNT]", parallels, null);
-        EWNode add = new EWNode ("[[[PS/2] PORT] COUNT]", ps2s, null);
-        EWNode ade = new EWNode ("[[[RJ-45] PORT] COUNT]", rj45s, null);
-        EWNode adf = new EWNode ("[[[SERIAL] PORT] COUNT]", serials, null);
-        EWNode adg = new EWNode ("[[[STEREO RCA] PORT] COUNT]", rcas, null);
-        EWNode adh = new EWNode ("[[[UNIQUE] PORT] COUNT]", uniqPorts, null);
-        EWNode aea = new EWNode ("[[[EMPTY] PORT PLATE] COUNT]", emptyPlates, null);
-        EWNode aeb = new EWNode ("[[[NON-EMPTY] PORT PLATE] COUNT]", nonEmptyPlates, null);
-        EWNode af = new EWNode ("[[BATTERY] COUNT]", bats, null);
-        EWNode ag = new EWNode ("[[BATTERY HOLDER] COUNT]", holders, null);
-        EWNode ah = new EWNode ("[[INDICATOR] COUNT]", inds, null);
-        EWNode ai = new EWNode ("[[MODULE] COUNT]", mods, null);
-        EWNode aj = new EWNode ("[[PORT] COUNT]", ports, null);
-        EWNode ak = new EWNode ("[[PORT PLATE] COUNT]", plates, null);
-        EWNode alaa = new EWNode ("[[SERIAL NUMBER [[EVEN] DIGIT]] COUNT]", snEvens, null);
-        EWNode alab = new EWNode ("[[SERIAL NUMBER [[ODD] DIGIT]] COUNT]", snOdds, null);
-        EWNode alb = new EWNode ("[[SERIAL NUMBER [CONSONANT]] COUNT]", snConsonants, null);
-        EWNode alc = new EWNode ("[[SERIAL NUMBER [DIGIT]] COUNT]", snDigits, null);
-        EWNode ald = new EWNode ("[[SERIAL NUMBER [LETTER]] COUNT]", snLetters, null);
-        EWNode ale = new EWNode ("[[SERIAL NUMBER [VOWEL]] COUNT]", snVowels, null);
-        EWNode baa = new EWNode ("[[1ST] SERIAL NUMBER [CHARACTER]]", firstSnChar, null);
-        EWNode bab = new EWNode ("[[2ND] SERIAL NUMBER [CHARACTER]]", secondSnChar, null);
-        EWNode bac = new EWNode ("[[3RD] SERIAL NUMBER [CHARACTER]]", thirdSnChar, null);
-        EWNode bad = new EWNode ("[[FIRST] SERIAL NUMBER [CHARACTER]]", firstSnChar, null);
-        EWNode bae = new EWNode ("[[LAST] SERIAL NUMBER [CHARACTER]]", lastSnChar, null);
-        EWNode baf = new EWNode ("[[SECOND] SERIAL NUMBER [CHARACTER]]", secondSnChar, null);
-        EWNode bag = new EWNode ("[[THIRD] SERIAL NUMBER [CHARACTER]]", thirdSnChar, null);
-        EWNode bba = new EWNode ("[[1ST] SERIAL NUMBER [DIGIT]]", firstSnDigit, null);
-        EWNode bbb = new EWNode ("[[2ND] SERIAL NUMBER [DIGIT]]", secondSnDigit, null);
-        EWNode bbc = new EWNode ("[[3RD] SERIAL NUMBER [DIGIT]]", thirdSnDigit, null);
-        EWNode bbd = new EWNode ("[[FIRST] SERIAL NUMBER [DIGIT]]", firstSnDigit, null);
-        EWNode bbe = new EWNode ("[[LAST] SERIAL NUMBER [DIGIT]]", lastSnDigit, null);
-        EWNode bbf = new EWNode ("[[SECOND] SERIAL NUMBER [DIGIT]]", secondSnDigit, null);
-        EWNode bbg = new EWNode ("[[THIRD] SERIAL NUMBER [DIGIT]]", thirdSnDigit, null);
-        EWNode bca = new EWNode ("[[1ST] SERIAL NUMBER [LETTER IN A1Z26]]", firstSnLetter, null);
-        EWNode bcb = new EWNode ("[[2ND] SERIAL NUMBER [LETTER IN A1Z26]]", secondSnLetter, null);
-        EWNode bcc = new EWNode ("[[3RD] SERIAL NUMBER [LETTER IN A1Z26]]", thirdSnLetter, null);
-        EWNode bcd = new EWNode ("[[FIRST] SERIAL NUMBER [LETTER IN A1Z26]]", firstSnLetter, null);
-        EWNode bce = new EWNode ("[[LAST] SERIAL NUMBER [LETTER IN A1Z26]]", lastSnLetter, null);
-        EWNode bcf = new EWNode ("[[SECOND] SERIAL NUMBER [LETTER IN A1Z26]]", secondSnLetter, null);
-        EWNode bcg = new EWNode ("[[THIRD] SERIAL NUMBER [LETTER IN A1Z26]]", thirdSnLetter, null);
-        EWNode caa = new EWNode ("[NUMBER OF [[AA] BATTERIES]]", aaBats, null);
-        EWNode cab = new EWNode ("[NUMBER OF [[D] BATTERIES]]", dBats, null);
-        EWNode cba = new EWNode ("[NUMBER OF [[LIT] INDICATORS]]", lits, null);
-        EWNode cbb = new EWNode ("[NUMBER OF [[UNLIT] INDICATORS]]", unlits, null);
-        EWNode cca = new EWNode ("[NUMBER OF [[LIT] INDICATORS CONTAINING A VOWEL]]", vowelLits, null);
-        EWNode ccb = new EWNode ("[NUMBER OF [[UNLIT] INDICATORS CONTAINING A VOWEL]]", vowelUnlits, null);
-        EWNode cda = new EWNode ("[NUMBER OF [[DISTINCT] MODULES]]", distMods, null);
-        EWNode cdb = new EWNode ("[NUMBER OF [[NEEDY] MODULES]]", needys, null);
-        EWNode cdc = new EWNode ("[NUMBER OF [[NON-NEEDY] MODULES]]", nonNeedys, null);
-        EWNode cdd = new EWNode ("[NUMBER OF [[UNIQUE] MODULES]]", uniqMods, null);
-        EWNode cea = new EWNode ("[NUMBER OF [[EMPTY] PORT PLATES]]", emptyPlates, null);
-        EWNode ceb = new EWNode ("[NUMBER OF [[NON-EMPTY] PORT PLATES]]", nonEmptyPlates, null);
-        EWNode cfa = new EWNode ("[NUMBER OF [[DISTINCT] PORTS]]", distPorts, null);
-        EWNode cfb = new EWNode ("[NUMBER OF [[DVI-D] PORTS]]]", dvis, null);
-        EWNode cfc = new EWNode ("[NUMBER OF [[PARALLEL] PORTS]]]", parallels, null);
-        EWNode cfd = new EWNode ("[NUMBER OF [[PS/2] PORTS]]]", ps2s, null);
-        EWNode cfe = new EWNode ("[NUMBER OF [[RJ-45] PORTS]]]", rj45s, null);
-        EWNode cff = new EWNode ("[NUMBER OF [[SERIAL] PORTS]]]", serials, null);
-        EWNode cfg = new EWNode ("[NUMBER OF [[STEREO RCA] PORTS]]]", rcas, null);
-        EWNode cfh = new EWNode ("[NUMBER OF [[UNIQUE] PORTS]]", uniqPorts, null);
-        EWNode cg = new EWNode ("[NUMBER OF [BATTERIES]]", bats, null);
-        EWNode ch = new EWNode ("[NUMBER OF [BATTERY HOLDERS]]", holders, null);
-        EWNode ci = new EWNode ("[NUMBER OF [INDICATORS]]", inds, null);
-        EWNode cj = new EWNode ("[NUMBER OF [INDICATORS CONTAINING A VOWEL]]", vowelInds, null);
-        EWNode ck = new EWNode ("[NUMBER OF [MODULES]]", mods, null);
-        EWNode cl = new EWNode ("[NUMBER OF [PORT PLATES]]", plates, null);
-        EWNode cm = new EWNode ("[NUMBER OF [PORTS]]", ports, null);
-        EWNode cna = new EWNode ("[NUMBER OF [SERIAL NUMBER [CONSONANTS]]]", snConsonants, null);
-        EWNode cnb = new EWNode ("[NUMBER OF [SERIAL NUMBER [DIGITS]]]", snDigits, null);
-        EWNode cnc = new EWNode ("[NUMBER OF [SERIAL NUMBER [LETTERS]]]", snLetters, null);
-        EWNode cnd = new EWNode ("[NUMBER OF [SERIAL NUMBER [VOWELS]]]", snVowels, null);
-        EWNode da = new EWNode ("[NUMBER OF [EVEN] DIGITS FROM SERIAL NUMBER]", snEvens, null);
-        EWNode db = new EWNode ("[NUMBER OF [ODD] DIGITS FROM SERIAL NUMBER]", snOdds, null);
-        EWNode eaa = new EWNode ("[SUM OF [[DISTINCT] DIGITS IN SERIAL NUMBER]]", snDistDigitSum, null);
-        EWNode eab = new EWNode ("[SUM OF [[UNIQUE] DIGITS IN SERIAL NUMBER]]", snUniqDigitSum, null);
-        EWNode ebaaaaa = new EWNode ("[SUM OF [[[[DISTINCT] LETTERS] IN A1Z26] FROM [[LIT] INDICATORS]]]", distLitLetterSum, null);
-        EWNode ebaaaab = new EWNode ("[SUM OF [[[[UNIQUE] LETTERS] IN A1Z26] FROM [[LIT] INDICATORS]]]", uniqLitLetterSum, null);
-        EWNode ebaaab = new EWNode ("[SUM OF [[[CONSONANTS] IN A1Z26] FROM [[LIT] INDICATORS]]]", litConsonantSum, null);
-        EWNode ebaaac = new EWNode ("[SUM OF [[[VOWELS] IN A1Z26] FROM [[LIT] INDICATORS]]]", litVowelSum, null);
-        EWNode ebaab = new EWNode ("[SUM OF [[LETTERS IN A1Z26] FROM [[LIT] INDICATORS]]]", litLetterSum, null);
-        EWNode ebabaaa = new EWNode ("[SUM OF [[[[DISTINCT] LETTERS] IN A1Z26] FROM [[UNLIT] INDICATORS]]]", distUnlitLetterSum, null);
-        EWNode ebabaab = new EWNode ("[SUM OF [[[[UNIQUE] LETTERS] IN A1Z26] FROM [[UNLIT] INDICATORS]]]", uniqUnlitLetterSum, null);
-        EWNode ebabab = new EWNode ("[SUM OF [[[CONSONANTS] IN A1Z26] FROM [[UNLIT] INDICATORS]]]", unlitConsonantSum, null);
-        EWNode ebabac = new EWNode ("[SUM OF [[[VOWELS] IN A1Z26] FROM [[UNLIT] INDICATORS]]]", unlitVowelSum, null);
-        EWNode ebabb = new EWNode ("[SUM OF [[LETTERS IN A1Z26] FROM [[UNLIT] INDICATORS]]]", unlitLetterSum, null);
-        EWNode ebbaaa = new EWNode ("[SUM OF [[[[DISTINCT] LETTERS] IN A1Z26] FROM [INDICATORS]]]", distIndLetterSum, null);
-        EWNode ebbaab = new EWNode ("[SUM OF [[[[UNIQUE] LETTERS] IN A1Z26] FROM [INDICATORS]]]", uniqIndLetterSum, null);
-        EWNode ebbab = new EWNode ("[SUM OF [[[CONSONANTS] IN A1Z26] FROM [INDICATORS]]]", indConsonantSum, null);
-        EWNode ebbac = new EWNode ("[SUM OF [[[VOWELS] IN A1Z26] FROM [INDICATORS]]]", indVowelSum, null);
-        EWNode ebbb = new EWNode ("[SUM OF [[LETTERS IN A1Z26] FROM [INDICATORS]]]", indLetterSum, null);
-        EWNode ebcaa = new EWNode ("[SUM OF [[[EVEN] DIGITS] FROM [SERIAL NUMBER]]]", snEvenSum, null);
-        EWNode ebcab = new EWNode ("[SUM OF [[[ODD] DIGITS] FROM [SERIAL NUMBER]]]", snOddSum, null);
-        EWNode ebcbaa = new EWNode ("[SUM OF [[[[DISTINCT] LETTERS] IN A1Z26] FROM [SERIAL NUMBER]]]", snDistLetterSum, null);
-        EWNode ebcbab = new EWNode ("[SUM OF [[[[UNIQUE] LETTERS] IN A1Z26] FROM [SERIAL NUMBER]]]", snUniqLetterSum, null);
-        EWNode ebcbb = new EWNode ("[SUM OF [[[CONSONANTS] IN A1Z26] FROM [SERIAL NUMBER]]]", snConsonantSum, null);
-        EWNode ebcbc = new EWNode ("[SUM OF [[[LETTERS] IN A1Z26] FROM [SERIAL NUMBER]]]", snLetterSum, null);
-        EWNode ebcbd = new EWNode ("[SUM OF [[[VOWELS] IN A1Z26] FROM [SERIAL NUMBER]]]", snVowelSum, null);
-        EWNode ec = new EWNode ("[SUM OF [DIGITS IN SERIAL NUMBER]]", snDigitSum, null);
-        EWNode eda = new EWNode ("[SUM OF [SERIAL NUMBER [CONSONANTS IN A1Z26]]]", snConsonantSum, null);
-        EWNode edb = new EWNode ("[SUM OF [SERIAL NUMBER [DIGITS]]]", snDigitSum, null);
-        EWNode edc = new EWNode ("[SUM OF [SERIAL NUMBER [LETTERS IN A1Z26]]]", snLetterSum, null);
-        EWNode edd = new EWNode ("[SUM OF [SERIAL NUMBER [VOWELS IN A1Z26]]]", snVowelSum, null);
-        EWNode ebaaaa = new EWNode (null, -1, new EWNode[] { ebaaaaa, ebaaaab });
-        EWNode ebabaa = new EWNode (null, -1, new EWNode[] { ebabaaa, ebabaab });
-        EWNode ebaaa = new EWNode (null, -1, new EWNode[] { ebaaaa, ebaaab, ebaaac });
-        EWNode ebaba = new EWNode (null, -1, new EWNode[] { ebabaa, ebabab, ebabac });
-        EWNode ebbaa = new EWNode (null, -1, new EWNode[] { ebbaaa, ebbaab });
-        EWNode ebcba = new EWNode (null, -1, new EWNode[] { ebcbaa, ebcbab });
-        EWNode ebaa = new EWNode (null, -1, new EWNode[] { ebaaa, ebaab });
-        EWNode ebab = new EWNode (null, -1, new EWNode[] { ebaba, ebabb });
-        EWNode ebba = new EWNode (null, -1, new EWNode[] { ebbaa, ebbab, ebbac });
-        EWNode ebca = new EWNode (null, -1, new EWNode[] { ebcaa, ebcab });
-        EWNode ebcb = new EWNode (null, -1, new EWNode[] { ebcba, ebcbb, ebcbc, ebcbd });
-        EWNode ala = new EWNode (null, -1, new EWNode[] { alaa, alab });
-        EWNode eba = new EWNode (null, -1, new EWNode[] { ebaa, ebab });
-        EWNode ebb = new EWNode (null, -1, new EWNode[] { ebba, ebbb });
-        EWNode ebc = new EWNode (null, -1, new EWNode[] { ebca, ebcb });
-        EWNode aa = new EWNode (null, -1, new EWNode[] { aaa, aab });
-        EWNode ab = new EWNode (null, -1, new EWNode[] { aba, abb });
-        EWNode ac = new EWNode (null, -1, new EWNode[] { aca, acb, acc, acd });
-        EWNode ad = new EWNode (null, -1, new EWNode[] { ada, adb, adc, add, ade, adf, adg, adh });
-        EWNode ae = new EWNode (null, -1, new EWNode[] { aea, aeb });
-        EWNode al = new EWNode (null, -1, new EWNode[] { ala, alb, alc, ald, ale });
-        EWNode ba = new EWNode (null, -1, new EWNode[] { baa, bab, bac, bad, bae, baf, bag });
-        EWNode bb = new EWNode (null, -1, new EWNode[] { bba, bbb, bbc, bbd, bbe, bbf, bbg });
-        EWNode bc = new EWNode (null, -1, new EWNode[] { bca, bcb, bcc, bcd, bce, bcf, bcg });
-        EWNode ca = new EWNode (null, -1, new EWNode[] { caa, cab });
-        EWNode cb = new EWNode (null, -1, new EWNode[] { cba, cbb });
-        EWNode cc = new EWNode (null, -1, new EWNode[] { cca, ccb });
-        EWNode cd = new EWNode (null, -1, new EWNode[] { cda, cdb, cdc, cdd });
-        EWNode ce = new EWNode (null, -1, new EWNode[] { cea, ceb });
-        EWNode cf = new EWNode (null, -1, new EWNode[] { cfa, cfb, cfc, cfd, cfe, cff, cfg, cfh });
-        EWNode cn = new EWNode (null, -1, new EWNode[] { cna, cnb, cnc, cnd });
-        EWNode ea = new EWNode (null, -1, new EWNode[] { eaa, eab });
-        EWNode eb = new EWNode (null, -1, new EWNode[] { eba, ebb, ebc });
-        EWNode ed = new EWNode (null, -1, new EWNode[] { eda, edb, edc, edd });
-        EWNode a = new EWNode (null, -1, new EWNode[] { aa, ab, ac, ad, ae, af, ag, ah, ai, aj, ak, al });
-        EWNode b = new EWNode (null, -1, new EWNode[] { ba, bb, bc });
-        EWNode c = new EWNode (null, -1, new EWNode[] { ca, cb, cc, cd, ce, cf, cg, ch, ci, cj, ck, cl, cm, cn });
-        EWNode d = new EWNode (null, -1, new EWNode[] { da, db });
-        EWNode e = new EWNode (null, -1, new EWNode[] { ea, eb, ec, ed });
-        EWNode x = new EWNode (null, -1, new EWNode[] { a, b, c, d, e });
-
-        if (limit > 3) {
-            promptText += GenEWText(limit - 2);
+        if (count < 2)
+        {
+            var singleton = pieces[Rnd.Range(0, 28)];
+            brackettedPrompt = count == 0 ? (starts.PickRandom() + " " + singleton.Key) : (starts.PickRandom() + " [" + singleton.Key + "]");
+            solution = singleton.Value;
+            return;
         }
+        
+        string promptSoFar = "";
+        bool multiple = false;
+        List<int> values = new List<int> { };
 
-        string GenEWText(int lim) {
-            TryAgain:
-            var currentNode = x;
-            bool good = true;
-            while (currentNode.Value == -1) {
-                List<EWNode> paths = new List<EWNode>();
-                for (int path = 0; path < currentNode.Children.Count(); path++) {
-                    if (currentNode.Children[path].Value != null) {
-                        paths.add(currentNode.Children[path]);
-                    }
-                }
-                if (paths.Count() == 1) {
-                    //this is fine
-                } else {
-                    List<int> values = new List<int>();
-                    for (int pv = 0; pv < paths.Count(); pv++) {
-                        if (!values.Contains(paths[pv].Value)) {
-                            values.Add(paths[pv].Value);
-                            if (values.Count() > 1) { break; }
-                        }
-                    }
-                    if (values.Count() == 1) {
-                        good = false;
-                        break;
-                    }
-                }
-                currentNode = paths.PickRandom();
+        while (allisoneckhartsremaining != 0)
+        {
+            if (multiple && allisoneckhartsremaining <= 1)
+            {
+                //start over
+                promptSoFar = "";
+                allisoneckhartsremaining = count;
+                multiple = false;
+                values.Clear();
             }
-            int numberOfAllisonEckhartsInThisEdgeworkPhrase = currentNode.Text.Split("[").Count() - 1;
-            if (!good || numberOfAllisonEckhartsInThisEdgeworkPhrase > lim) {
-                goto TryAgain;
-            }
-            promptValues.Add(currentNode.Value);
-            return " " + currentNode.Text;
-        }
-    }
-
-    int DistinctCount(string[] arr) 
-    {
-        /* this shit broken :(
-        List<string> things = new List<string>();
-
-        foreach (var thing in arr) {
-            if (!arr.Contains(thing))
-                things.Add(thing);
-        }
-
-        return things.Count();
-        */
-        return -1;
-    }
-
-    int UniqueCount(string[] arr) 
-    {
-        /* ditto 
-        List<string> things = new List<string>();
-        List<int> amounts = new List<int>();
-
-        foreach (var thing in arr) {
-            if (arr.Contains(thing)) {
-                amounts[things.IndexOf(thing)]++;
+            var pickedPiece = pieces.PickRandom();
+            string pieceString = pickedPiece.Key.Split('|').PickRandom();
+            if (!multiple)
+            {
+                promptSoFar += "[" + pieceString + "]";
+                values.Add(pickedPiece.Value);
+                allisoneckhartsremaining -= pieceString.Split('[').Count();
+                multiple = true;
             } else {
-                things.Add(thing);
-                amounts.Add(thing);
+                bool negative = values.Sum() < pickedPiece.Value ? false : Rnd.Range(0, 2) == 1;
+                promptSoFar += " [" + (negative ? "MINUS" : "PLUS") + "] [" + pieceString + "]";
+                values.Add(pickedPiece.Value * (negative ? -1 : 1));
+                allisoneckhartsremaining -= 1 + pieceString.Split('[').Count();
             }
         }
 
-        return things.Select(i => amounts[things.IndexOf(i)] == 1);
-        */
-        return -1;
+
+        brackettedPrompt = starts.PickRandom() + " " + promptSoFar;
+        solution = values.Sum();
+
+        Debug.Log("Generated \"" + brackettedPrompt + "\", answer is " + solution);
+
+        string originalPrompt = brackettedPrompt;
+        List<int> pairStart = new List<int>();
+        List<int> pairEnd = new List<int>();
+        List<int> currentStarts = new List<int>();
+
+        for (int ch = 0; ch < brackettedPrompt.Length; ch++)
+        {
+            if (brackettedPrompt[ch] == '[') {
+                currentStarts.Add(ch);
+            } else if (brackettedPrompt[ch] == ']') {
+                pairStart.Add(currentStarts.Last());
+                currentStarts.RemoveAt(currentStarts.Count() - 1);
+                pairEnd.Add(ch);
+            }
+        }
+
+        char[] charSplit = brackettedPrompt.ToArray();
+        List<string> hashed = new List<string>();
+
+        for (int p = 0; p < pairStart.Count(); p++) {
+            string thisHash = "";
+            for (int ch = 0; ch < charSplit.Length; ch++) {
+                thisHash += ch > pairStart[p] && ch < pairEnd[p] ? '#' : charSplit[ch];
+            }
+            charSplit = thisHash.ToArray();
+            hashed.Add(thisHash);
+        }
+
+        hashed = hashed.ToArray().Reverse().ToList();
+
+        for (int h = 0; h < hashed.Count(); h++) {
+            hashed[h] = hashed[h].Replace("[", "").Replace("]", "");
+            while (hashed[h].Contains("##")) {
+                hashed[h] = hashed[h].Replace("##", "#");
+            }
+            hashed[h] = hashed[h].Replace("#", "ALLISON ECKHART");
+            promptIterations.Add(hashed[h]);
+        }
+
+        promptIterations.Add(originalPrompt.Replace("[", "").Replace("]", ""));
+        
+        Debug.Log(promptIterations.Join(" / "));
     }
 
     private void GenerateAllisonEckhart()
@@ -374,15 +249,17 @@ public class AllisonEckhartScript : MonoBehaviour
             }
         }
         Debug.LogFormat("<Allison Eckhart #{0}> Found {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
+        /*
         while (_foundMods.Count > 10) 
         {
             int modIndex = Rnd.Range(0, _foundMods.Count);
             _foundMods.RemoveAt(modIndex);
             names.RemoveAt(modIndex);
         }
+        */
         Debug.LogFormat("[Allison Eckhart #{0}] Possessing {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
         //TODO(?): If multiple Allison Eckharts are present, divy up the supported modules among the Allison Eckharts.
-        GeneratePrompt(_foundMods.Count);
+        GeneratePrompt(debugMode ? debugNumber : _foundMods.Count);
         alreadyRan = true;
     }
 
@@ -451,6 +328,8 @@ public class AllisonEckhartScript : MonoBehaviour
             case "Caesar Cycle": SetText(usedMeshes[20], "A", 1f, 1f); SetText(usedMeshes[21], "L", 1f, 1f); SetText(usedMeshes[22], "L", 1f, 1f); SetText(usedMeshes[23], "I", 1f, 1f); SetText(usedMeshes[24], "S", 1f, 1f); SetText(usedMeshes[25], "O", 1f, 1f); SetText(usedMeshes[26], "N", 1f, 1f); SetText(usedMeshes[29], "E", 1f, 1f); SetText(usedMeshes[30], "C", 1f, 1f); SetText(usedMeshes[31], "K", 1f, 1f); SetText(usedMeshes[32], "H", 1f, 1f); SetText(usedMeshes[33], "A", 1f, 1f); SetText(usedMeshes[34], "R", 1f, 1f); SetText(usedMeshes[35], "T", 1f, 1f); break;
             case "Calculus": SetText(usedMeshes[2], "ALLISON\nECKHART", 1f, 1f); break;
            
+           //from what I recall, above this was exhaustively going through mods alphabetically
+
             case "Catchphrase": SetText(usedMeshes[12], "ALLISON", 0.172f, 1f); SetText(usedMeshes[11], "ECKHART", 0.15f, 1f); break;
             case "Challenge & Contact": SetText(usedMeshes[2], "ALLISON\nECKHART", 0.6f, 0.6f); break;
             case "Chaotic Countdown": SetText(usedMeshes[14], "ALLI", 0.361f, 0.5f); SetText(usedMeshes[15], "SON", 0.361f, 0.5f); SetText(usedMeshes[16], "ECK", 0.361f, 0.5f); SetText(usedMeshes[17], "HART", 0.274f, 0.5f); break;
@@ -799,5 +678,31 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         tMesh.text = text;
         tMesh.gameObject.transform.localScale = new Vector3(tMesh.gameObject.transform.localScale.x * scaleX, tMesh.gameObject.transform.localScale.y * scaleY, tMesh.gameObject.transform.localScale.z);
+    }
+
+    string wordWrap(string text, int limit)
+    {
+        if (text.Length > limit)
+        {
+            int edge = text.Substring(0, limit).LastIndexOf(' ');
+            if (edge > 0)
+            {
+                string line = text.Substring(0, edge);
+                string remainder = text.Substring(edge + 1);
+                return line + '\n' + wordWrap(remainder, limit);
+            }
+        }
+        return text;
+    }
+
+    private string GetLatestSolve(List<string> a, List<string> b)
+    {
+        string z = "";
+        for(int i = 0; i < b.Count; i++)
+        {
+            a.Remove(b.ElementAt(i));
+        }
+        z = a.ElementAt(0);
+        return z;
     }
 }

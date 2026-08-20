@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.38073993, b: 0.358727, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.35872743, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -193,20 +193,6 @@ Prefab:
     - target: {fileID: 4796660266098002, guid: e9b9f00a8d68cf34d9e41a2f36f29316, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1713080922715150, guid: e9b9f00a8d68cf34d9e41a2f36f29316, type: 2}
-      propertyPath: m_Name
-      value: Allison Eckhart
-      objectReference: {fileID: 0}
-    - target: {fileID: 102179992241764704, guid: e9b9f00a8d68cf34d9e41a2f36f29316,
-        type: 2}
-      propertyPath: m_Text
-      value: 000000
-      objectReference: {fileID: 0}
-    - target: {fileID: 102519900682491806, guid: e9b9f00a8d68cf34d9e41a2f36f29316,
-        type: 2}
-      propertyPath: m_Text
-      value: "COMPUTE 110101\nLOGICAL EXCLUSIVE OR \n101010 THEN CLEAR"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e9b9f00a8d68cf34d9e41a2f36f29316, type: 2}

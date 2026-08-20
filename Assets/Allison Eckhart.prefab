@@ -4064,7 +4064,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1251465212650432}
-  m_Text: 1337
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -4190,7 +4190,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1449718518742734}
-  m_Text: "COMPUTE 11010100\nLOGICAL EXCLUSIVE OR \n01110101 THEN CLEAR"
+  m_Text: "COMPUTE 110101\nLOGICAL EXCLUSIVE OR \n101010 THEN CLEAR"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -5124,6 +5124,13 @@ MonoBehaviour:
   Module: {fileID: 114943217843082284}
   Bomb: {fileID: 114254322482168384}
   Audio: {fileID: 114960229496981458}
+  ScreenText: {fileID: 102519900682491806}
+  InputText: {fileID: 102179992241764704}
+  Clear: {fileID: 114274588428864144}
+  Submit: {fileID: 114234574297524002}
+  NumberButtons: []
+  debugMode: 1
+  debugNumber: 20
 --- !u!114 &114763940450797378
 MonoBehaviour:
   m_ObjectHideFlags: 1
