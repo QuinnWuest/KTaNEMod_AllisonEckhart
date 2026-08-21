@@ -5142,7 +5142,7 @@ MonoBehaviour:
   - {fileID: 114606153474663796}
   - {fileID: 114892795373802854}
   - {fileID: 114853611032281672}
-  DebugNumber: 20
+  DebugNumber: 1
 --- !u!114 &114763940450797378
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5353,7 +5353,7 @@ MonoBehaviour:
   m_Script: {fileID: -119419473, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModuleType: AllisonEckhart
+  ModuleType: AllisonEckhartModule
   ModuleDisplayName: Allison Eckhart
   RequiresTimerVisibility: 0
 --- !u!114 &114947293932005086

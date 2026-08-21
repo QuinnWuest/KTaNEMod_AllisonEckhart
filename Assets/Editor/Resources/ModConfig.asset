@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: AllisonEckhartModule
   title: Allison Eckhart
-  author: Quinn Wuest
+  author: Quinn Wuest & Blananas2
   description: Allison Eckhart
   version: 1.0
   outputFolder: build

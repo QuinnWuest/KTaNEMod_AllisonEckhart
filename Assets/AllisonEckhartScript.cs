@@ -125,18 +125,6 @@ public class AllisonEckhartScript : MonoBehaviour
             new KeyValuePair<string, int>("THIRTEEN", 13),
             new KeyValuePair<string, int>("FOURTEEN", 14),
             new KeyValuePair<string, int>("FIFTEEN", 15),
-            new KeyValuePair<string, int>("SIXTEEN", 16),
-            new KeyValuePair<string, int>("SEVENTEEN", 17),
-            new KeyValuePair<string, int>("EIGHTEEN", 18),
-            new KeyValuePair<string, int>("NINETEEN", 19),
-            new KeyValuePair<string, int>("TWENTY", 20),
-            new KeyValuePair<string, int>("THIRTY", 30),
-            new KeyValuePair<string, int>("FORTY", 40),
-            new KeyValuePair<string, int>("FIFTY", 50),
-            new KeyValuePair<string, int>("SIXTY", 60),
-            new KeyValuePair<string, int>("SEVENTY", 70),
-            new KeyValuePair<string, int>("EIGHTY", 80),
-            new KeyValuePair<string, int>("NINETY", 90),
             new KeyValuePair<string, int>("[MODULE] COUNT|NUMBER OF [MODULES]", Bomb.GetModuleIDs().Count()),
             //distinct modules
             //unique modules
@@ -166,12 +154,17 @@ public class AllisonEckhartScript : MonoBehaviour
             new KeyValuePair<string, int>("[FIRST] SERIAL NUMBER [DIGIT]|[1ST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[0]),
             new KeyValuePair<string, int>("[SECOND] SERIAL NUMBER [DIGIT]|[2ND] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[1]),
             new KeyValuePair<string, int>("[LAST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
+
+            // THIS DOESNT CURRENTLY CHECK FOR VOLTAGE
+            // new KeyValuePair<string, int>("VOLTAGE", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
+            // new KeyValuePair<string, int>("VOLTAGE ROUNDED [UP]", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
+            // new KeyValuePair<string, int>("VOLTAGE ROUNDED [DOWN]", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
             //there's more but honestly can't be fucked atm
         };
 
         var variants = pieces.SelectMany(piece => piece.Key.Split('|').Select(text => new PromptVariant(text, piece.Value))).ToList();
 
-        int promptCount = Mathf.Max(3, count);
+        int promptCount = Mathf.Max(5, count);
         int allisonEckhartsRemaining = promptCount;
         string promptSoFar = "";
         List<int> values = new List<int>();
@@ -465,7 +458,7 @@ public class AllisonEckhartScript : MonoBehaviour
             {
                 _foundMods.Add(mods[i]);
                 names.Add(name);
-                if (Application.isEditor) { ModuleProcessor.ProcessModule(mods[i]); }
+                ModuleProcessor.ProcessModule(mods[i]);
             }
         }
         Debug.LogFormat("<Allison Eckhart #{0}> Found {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
