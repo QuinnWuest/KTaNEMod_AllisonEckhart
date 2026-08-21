@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class ModuleProcessor
 {
-    public static void ProcessModule(KMBombModule module, bool debugMode)
+    public static void ProcessModule(KMBombModule module)
     {
         ModuleInfo info = Data.data[module.ModuleDisplayName];
         TextMesh[] usedMeshes = info.GetTextMeshes(module);
@@ -387,7 +387,13 @@ public static class ModuleProcessor
             case "Yellow Cipher":
             case "Yellow Huffman Cipher":
                 SetText(usedMeshes[29], "ALLISON", 0.25f, 1f); SetText(usedMeshes[30], "ECKHART", 0.21f, 1f); break;
-            default: if (debugMode) { for (int i = 0; i < usedMeshes.Length; i++) SetText(usedMeshes[i], i.ToString(), 0.5f, 0.5f); } break;
+            default:
+                if (Application.isEditor)
+                {
+                    for (int i = 0; i < usedMeshes.Length; i++)
+                        SetText(usedMeshes[i], i.ToString(), 0.5f, 0.5f);
+                }
+                break;
 
                 //Unused =
                 // QUIRKY //             case "8": SetText(usedMeshes[0], "ALLISON\nECKHART", 0.18f, 0.18f); break;

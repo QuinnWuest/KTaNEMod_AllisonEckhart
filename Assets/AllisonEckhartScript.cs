@@ -18,21 +18,24 @@ public class AllisonEckhartScript : MonoBehaviour
     public KMSelectable Submit;
     public KMSelectable[] NumberButtons;
 
+    public int DebugNumber;
+
     private int _moduleId;
     private static int _moduleIdCounter = 1;
     private bool _moduleSolved;
-    private static bool alreadyRan = false;
-    private static List<KMBombModule> _foundMods = new List<KMBombModule>();
-    public bool debugMode = true;
-    public int debugNumber = 7;
-    private int solution;
-    string brackettedPrompt;
-    List<string> promptIterations = new List<string>();
-    int solvedAllisonEckhartedModules = 0;
 
-    private int Solves;
-    private string MostRecent;
-    private List<string> SolveList = new List<string> { };
+    private static readonly string[] _calcStarts = "INPUT,COMPUTE,CALCULATE,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
+
+    private static bool _alreadyRan = false;
+    private static List<KMBombModule> _foundMods = new List<KMBombModule>();
+    private int _solution;
+    private string _brackettedPrompt;
+    private readonly List<string> _promptIterations = new List<string>();
+    private int _solvedAllisonEckhartedModules = 0;
+
+    private int _solves;
+    private string _mostRecent;
+    private readonly List<string> _solveList = new List<string>();
 
     private void Start()
     {
@@ -40,9 +43,8 @@ public class AllisonEckhartScript : MonoBehaviour
         Clear.OnInteract += delegate () { ClearPress(); return false; };
 
         GenerateAllisonEckhart();
-        Debug.Log("<>" + promptIterations[0]);
 
-        var textToDisplay = promptIterations[0];
+        var textToDisplay = _promptIterations[0];
         WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
     }
 
@@ -50,10 +52,10 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         if (!_moduleSolved)
         {
-            Solves = Bomb.GetSolvedModuleIDs().Count();
-            if (Solves > SolveList.Count())
+            _solves = Bomb.GetSolvedModuleIDs().Count();
+            if (_solves > _solveList.Count())
             {
-                MostRecent = GetLatestSolve(Bomb.GetSolvedModuleIDs(), SolveList);
+                _mostRecent = GetLatestSolve(Bomb.GetSolvedModuleIDs(), _solveList);
                 if (true /*_foundMods.Contains(MostRecent)*/)
                 {
 
@@ -64,11 +66,13 @@ public class AllisonEckhartScript : MonoBehaviour
 
     void ClearPress()
     {
-        if (debugMode)
+        if (Application.isEditor)
         {
-            solvedAllisonEckhartedModules++;
-            var textToDisplay =
-            promptIterations[solvedAllisonEckhartedModules];
+            if (_solvedAllisonEckhartedModules >= _promptIterations.Count - 1)
+                return;
+
+            _solvedAllisonEckhartedModules++;
+            var textToDisplay = _promptIterations[_solvedAllisonEckhartedModules];
 
             WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
         }
@@ -86,11 +90,22 @@ public class AllisonEckhartScript : MonoBehaviour
         }
     }
 
+    private class PromptVariant
+    {
+        public string Text;
+        public int Value;
+        public int Cost;
+
+        public PromptVariant(string text, int value)
+        {
+            Text = text;
+            Value = value;
+            Cost = text.Split('[').Count();
+        }
+    }
+
     private void GeneratePrompt(int count)
     {
-        int allisoneckhartsremaining = count;
-
-        string[] starts = "INPUT,COMPUTE,CALCULATE,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
 
         var pieces = new KeyValuePair<string, int>[]
         {
@@ -154,106 +169,291 @@ public class AllisonEckhartScript : MonoBehaviour
             //there's more but honestly can't be fucked atm
         };
 
-        if (count < 2)
+        var variants = pieces.SelectMany(piece => piece.Key.Split('|').Select(text => new PromptVariant(text, piece.Value))).ToList();
+
+        int promptCount = Mathf.Max(3, count);
+        int allisonEckhartsRemaining = promptCount;
+        string promptSoFar = "";
+        List<int> values = new List<int>();
+
+        var firstCandidates = variants.Where(v => v.Cost <= allisonEckhartsRemaining - 2).ToList();
+        var firstPiece = firstCandidates.PickRandom();
+
+        promptSoFar = "[" + firstPiece.Text + "]";
+        values.Add(firstPiece.Value);
+        allisonEckhartsRemaining -= firstPiece.Cost;
+
+        while (allisonEckhartsRemaining > 0)
         {
-            var singleton = pieces[Rnd.Range(0, 28)];
-            brackettedPrompt = count == 0 ? (starts.PickRandom() + " " + singleton.Key) : (starts.PickRandom() + " [" + singleton.Key + "]");
-            solution = singleton.Value;
+            var candidates = variants.Where(v =>
+                {
+                    int remainingAfter = allisonEckhartsRemaining - 1 - v.Cost;
+                    return remainingAfter == 0 || remainingAfter >= 2;
+                }).ToList();
+
+            var pickedPiece = candidates.PickRandom();
+            bool negative = values.Sum() >= pickedPiece.Value && Rnd.Range(0, 2) == 1;
+
+            promptSoFar += " [" + (negative ? "MINUS" : "PLUS") + "] [" + pickedPiece.Text + "]";
+            values.Add(pickedPiece.Value * (negative ? -1 : 1));
+            allisonEckhartsRemaining -= 1 + pickedPiece.Cost;
+        }
+
+
+        _brackettedPrompt = _calcStarts.PickRandom() + " " + promptSoFar;
+        _solution = values.Sum();
+
+        Debug.LogFormat("[Allison Eckhart #{0}] Generated phrase:", _moduleId);
+        Debug.LogFormat("[Allison Eckhart #{0}] {1}", _moduleId, _brackettedPrompt);
+        Debug.LogFormat("[Allison Eckhart #{0}] Solution: {1}", _moduleId, _solution);
+
+        BuildBinaryRevealIterations(_brackettedPrompt, count);
+    }
+
+    private class RevealGroup
+    {
+        public RevealGroup Parent;
+        public List<RevealGroup> ChildGroups = new List<RevealGroup>();
+        public List<RevealNode> DirectLeaves = new List<RevealNode>();
+
+        public bool IsComplete
+        {
+            get { return ChildGroups.All(g => g.IsComplete) && DirectLeaves.All(l => l.Revealed); }
+        }
+
+        public bool EnclosingLevelsRevealed
+        {
+            get
+            {
+                RevealGroup ancestor = Parent;
+                while (ancestor != null)
+                {
+                    if (ancestor.DirectLeaves.Any(l => !l.Revealed))
+                        return false;
+                    ancestor = ancestor.Parent;
+                }
+                return true;
+            }
+        }
+    }
+
+    private class RevealNode
+    {
+        public string Text;
+        public RevealNode Left;
+        public RevealNode Right;
+        public RevealGroup Group;
+        public bool Revealed;
+
+        public bool IsLeaf { get { return Left == null && Right == null; } }
+
+        public RevealNode(string text, RevealGroup group)
+        {
+            Text = text;
+            Group = group;
+            Revealed = false;
+        }
+
+        public RevealNode(RevealNode left, RevealNode right)
+        {
+            Left = left;
+            Right = right;
+        }
+    }
+
+    private class VisibleRevealNode
+    {
+        public RevealNode Node;
+        public VisibleRevealNode(RevealNode node)
+        {
+            Node = node;
+        }
+    }
+
+    private void BuildBinaryRevealIterations(string prompt, int pressCount)
+    {
+        _promptIterations.Clear();
+
+        var root = ParseRevealSequence(prompt, null);
+        var visible = new List<VisibleRevealNode> { new VisibleRevealNode(root) };
+
+        var microIterations = new List<string> { "ALLISON ECKHART" };
+
+        while (visible.Any(v => !v.Node.IsLeaf))
+        {
+            var expandable = new List<int>();
+            for (int i = 0; i < visible.Count; i++)
+                if (!visible[i].Node.IsLeaf)
+                    expandable.Add(i);
+
+            int splitIndex = expandable.PickRandom();
+            var splitNode = visible[splitIndex].Node;
+
+            visible.RemoveAt(splitIndex);
+            visible.Insert(splitIndex, new VisibleRevealNode(splitNode.Right));
+            visible.Insert(splitIndex, new VisibleRevealNode(splitNode.Left));
+
+            microIterations.Add(RenderRevealGeneration(visible));
+        }
+
+        while (visible.Any(v => !v.Node.Revealed))
+        {
+            var eligible = new List<int>();
+
+            for (int i = 0; i < visible.Count; i++)
+            {
+                var leaf = visible[i].Node;
+                if (leaf.Revealed)
+                    continue;
+
+                if (leaf.Group == null || leaf.Group.EnclosingLevelsRevealed)
+                    eligible.Add(i);
+            }
+
+            if (eligible.Count == 0)
+                eligible = Enumerable.Range(0, visible.Count).Where(i => !visible[i].Node.Revealed).ToList();
+
+            int revealIndex = eligible.PickRandom();
+            visible[revealIndex].Node.Revealed = true;
+            microIterations.Add(RenderRevealGeneration(visible));
+        }
+
+        pressCount = Mathf.Max(0, pressCount);
+
+        if (pressCount == 0)
+        {
+            _promptIterations.Add(microIterations.Last());
             return;
         }
 
-        string promptSoFar = "";
-        bool multiple = false;
-        List<int> values = new List<int> { };
+        int transitionCount = microIterations.Count - 1;
 
-        while (allisoneckhartsremaining != 0)
+        if (transitionCount >= pressCount)
         {
-            if (multiple && allisoneckhartsremaining <= 1)
+            _promptIterations.Add(microIterations[0]);
+
+            var milestones = new List<int>();
+            for (int press = 1; press < pressCount; press++)
             {
-                //start over
-                promptSoFar = "";
-                allisoneckhartsremaining = count;
-                multiple = false;
-                values.Clear();
+                int minIndex = milestones.Count == 0 ? 1 : milestones.Last() + 1;
+                int maxIndex = transitionCount - (pressCount - press);
+
+                float ideal = (float)press * transitionCount / pressCount;
+                int idealIndex = Mathf.RoundToInt(ideal);
+                int low = Mathf.Max(minIndex, idealIndex - 1);
+                int high = Mathf.Min(maxIndex, idealIndex + 1);
+                int chosen = low <= high ? Rnd.Range(low, high + 1) : minIndex;
+
+                milestones.Add(chosen);
             }
-            var pickedPiece = pieces.PickRandom();
-            string pieceString = pickedPiece.Key.Split('|').PickRandom();
-            if (!multiple)
+
+            milestones.Add(transitionCount);
+
+            foreach (int index in milestones)
+                _promptIterations.Add(microIterations[index]);
+        }
+        else
+        {
+            _promptIterations.Add(microIterations[0]);
+
+            for (int i = 1; i < microIterations.Count - 1; i++)
+                _promptIterations.Add(microIterations[i]);
+
+            string preFinal = microIterations.Count > 1 ? microIterations[microIterations.Count - 2] : microIterations[0];
+
+            while (_promptIterations.Count < pressCount)
+                _promptIterations.Add(preFinal);
+
+            _promptIterations.Add(microIterations.Last());
+        }
+    }
+
+    private string RenderRevealGeneration(List<VisibleRevealNode> visible)
+    {
+        return visible.Select(v => v.Node.Revealed ? v.Node.Text : "ALLISON ECKHART").ToArray().Join(" ");
+    }
+
+    private RevealNode ParseRevealSequence(string text, RevealGroup currentGroup)
+    {
+        var nodes = new List<RevealNode>();
+        int literalStart = 0;
+        int i = 0;
+
+        while (i < text.Length)
+        {
+            if (text[i] != '[')
             {
-                promptSoFar += "[" + pieceString + "]";
-                values.Add(pickedPiece.Value);
-                allisoneckhartsremaining -= pieceString.Split('[').Count();
-                multiple = true;
+                i++;
+                continue;
             }
-            else
+
+            AddRevealLiteral(nodes, text.Substring(literalStart, i - literalStart), currentGroup);
+
+            int depth = 1;
+            int end = i + 1;
+            while (end < text.Length && depth > 0)
             {
-                bool negative = values.Sum() < pickedPiece.Value ? false : Rnd.Range(0, 2) == 1;
-                promptSoFar += " [" + (negative ? "MINUS" : "PLUS") + "] [" + pieceString + "]";
-                values.Add(pickedPiece.Value * (negative ? -1 : 1));
-                allisoneckhartsremaining -= 1 + pieceString.Split('[').Count();
+                if (text[end] == '[')
+                    depth++;
+                else if (text[end] == ']')
+                    depth--;
+                end++;
             }
+
+            if (depth != 0)
+            {
+                AddRevealLiteral(nodes, text.Substring(i), currentGroup);
+                literalStart = text.Length;
+                i = text.Length;
+                break;
+            }
+
+            var childGroup = new RevealGroup { Parent = currentGroup };
+            if (currentGroup != null)
+                currentGroup.ChildGroups.Add(childGroup);
+
+            string inside = text.Substring(i + 1, end - i - 2);
+            nodes.Add(ParseRevealSequence(inside, childGroup));
+
+            i = end;
+            literalStart = end;
         }
 
+        if (literalStart < text.Length)
+            AddRevealLiteral(nodes, text.Substring(literalStart), currentGroup);
 
-        brackettedPrompt = starts.PickRandom() + " " + promptSoFar;
-        solution = values.Sum();
+        return MakeRevealBinaryTree(nodes);
+    }
 
-        Debug.Log("Generated \"" + brackettedPrompt + "\", answer is " + solution);
+    private void AddRevealLiteral(List<RevealNode> nodes, string literal, RevealGroup group)
+    {
+        string trimmed = literal.Trim();
+        if (trimmed.Length == 0)
+            return;
 
-        string originalPrompt = brackettedPrompt;
-        List<int> pairStart = new List<int>();
-        List<int> pairEnd = new List<int>();
-        List<int> currentStarts = new List<int>();
+        var leaf = new RevealNode(trimmed, group);
+        nodes.Add(leaf);
 
-        for (int ch = 0; ch < brackettedPrompt.Length; ch++)
-        {
-            if (brackettedPrompt[ch] == '[')
-            {
-                currentStarts.Add(ch);
-            }
-            else if (brackettedPrompt[ch] == ']')
-            {
-                pairStart.Add(currentStarts.Last());
-                currentStarts.RemoveAt(currentStarts.Count() - 1);
-                pairEnd.Add(ch);
-            }
-        }
+        if (group != null)
+            group.DirectLeaves.Add(leaf);
+    }
 
-        char[] charSplit = brackettedPrompt.ToArray();
-        List<string> hashed = new List<string>();
+    private RevealNode MakeRevealBinaryTree(List<RevealNode> nodes)
+    {
+        if (nodes.Count == 0)
+            return new RevealNode("", null);
+        if (nodes.Count == 1)
+            return nodes[0];
 
-        for (int p = 0; p < pairStart.Count(); p++)
-        {
-            string thisHash = "";
-            for (int ch = 0; ch < charSplit.Length; ch++)
-            {
-                thisHash += ch > pairStart[p] && ch < pairEnd[p] ? '#' : charSplit[ch];
-            }
-            charSplit = thisHash.ToArray();
-            hashed.Add(thisHash);
-        }
-
-        hashed = hashed.ToArray().Reverse().ToList();
-
-        for (int h = 0; h < hashed.Count(); h++)
-        {
-            hashed[h] = hashed[h].Replace("[", "").Replace("]", "");
-            while (hashed[h].Contains("##"))
-            {
-                hashed[h] = hashed[h].Replace("##", "#");
-            }
-            hashed[h] = hashed[h].Replace("#", "ALLISON ECKHART");
-            promptIterations.Add(hashed[h]);
-        }
-
-        promptIterations.Add(originalPrompt.Replace("[", "").Replace("]", ""));
-
-        // Debug.Log(promptIterations.Join(" / "));
+        int midpoint = nodes.Count / 2;
+        var left = MakeRevealBinaryTree(nodes.Take(midpoint).ToList());
+        var right = MakeRevealBinaryTree(nodes.Skip(midpoint).ToList());
+        return new RevealNode(left, right);
     }
 
     private void GenerateAllisonEckhart()
     {
-        if (alreadyRan)
+        if (_alreadyRan)
             return;
         string sn = Bomb.GetSerialNumber();
         KMBombModule[] mods = FindObjectsOfType<KMBombModule>().Where(x => x.GetComponent<KMBombInfo>() != null && x.GetComponent<KMBombInfo>().GetSerialNumber() == sn).ToArray();
@@ -265,7 +465,7 @@ public class AllisonEckhartScript : MonoBehaviour
             {
                 _foundMods.Add(mods[i]);
                 names.Add(name);
-                if (debugMode) { ModuleProcessor.ProcessModule(mods[i], debugMode); }
+                if (Application.isEditor) { ModuleProcessor.ProcessModule(mods[i]); }
             }
         }
         Debug.LogFormat("<Allison Eckhart #{0}> Found {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
@@ -279,13 +479,13 @@ public class AllisonEckhartScript : MonoBehaviour
         */
         Debug.LogFormat("[Allison Eckhart #{0}] Possessing {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
         //TODO(?): If multiple Allison Eckharts are present, divy up the supported modules among the Allison Eckharts.
-        GeneratePrompt(debugMode ? debugNumber : _foundMods.Count);
-        alreadyRan = true;
+        GeneratePrompt(Application.isEditor ? DebugNumber : _foundMods.Count);
+        _alreadyRan = true;
     }
 
     private void OnDestroy()
     {
-        alreadyRan = false;
+        _alreadyRan = false;
         _foundMods = new List<KMBombModule>();
     }
 
