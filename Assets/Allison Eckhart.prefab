@@ -1192,7 +1192,7 @@ Transform:
   m_GameObject: {fileID: 1449718518742734}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.006, z: 0}
-  m_LocalScale: {x: 0.00025, y: 0.00025, z: 0.00025}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 1}
   m_Children: []
   m_Father: {fileID: 4453943414778920}
   m_RootOrder: 2
@@ -4192,12 +4192,12 @@ TextMesh:
   m_GameObject: {fileID: 1449718518742734}
   m_Text: "COMPUTE 110101\nLOGICAL EXCLUSIVE OR \n101010 THEN CLEAR"
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.25
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 256
+  m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 9ee8c54419b49f040b993e903c15cacd, type: 3}
@@ -5125,6 +5125,7 @@ MonoBehaviour:
   Bomb: {fileID: 114254322482168384}
   Audio: {fileID: 114960229496981458}
   ScreenText: {fileID: 102519900682491806}
+  ScreenTextRenderer: {fileID: 23183197000056274}
   InputText: {fileID: 102179992241764704}
   Clear: {fileID: 114274588428864144}
   Submit: {fileID: 114234574297524002}
