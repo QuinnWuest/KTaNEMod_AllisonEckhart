@@ -5,3 +5,9 @@
 /[Tt]emp/
 *.csproj
 *.sln
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
