@@ -26,7 +26,7 @@ public class AllisonEckhartScript : MonoBehaviour
     private static int _moduleIdCounter = 1;
     private bool _moduleSolved;
 
-    private static readonly string[] _calcStarts = "Input,Compute,Calculate,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
+    private static readonly string[] _calcStarts = "Input,Compute,Calculate,Punch in,Type in,Determine,Evaluate,Quantify".Split(',');
 
     private static bool _alreadyRan = false;
     private static List<KMBombModule> _foundMods = new List<KMBombModule>();
@@ -189,10 +189,8 @@ public class AllisonEckhartScript : MonoBehaviour
     private void GatherInfo()
     {
         _moduleIx = _info.AllisonEckhartModules.IndexOf(this);
-        Debug.Log("<> " + _moduleIx);
         if (_moduleIx != 0)
             return;
-        Debug.Log("<> going");
         string sn = BombInfo.GetSerialNumber();
         var kmBombMods = FindObjectsOfType<KMBombModule>().Where(x => x.GetComponent<KMBombInfo>() != null && x.GetComponent<KMBombInfo>().GetSerialNumber() == sn).ToArray();
         List<string> names = new List<string>();
@@ -200,10 +198,8 @@ public class AllisonEckhartScript : MonoBehaviour
         for (int i = 0; i < kmBombMods.Length; i++)
         {
             string name = kmBombMods[i].ModuleDisplayName;
-            Debug.Log("<> name " + name);
             if (Data.data.ContainsKey(name))
             {
-                Debug.Log("<> added " + name);
                 _foundMods.Add(kmBombMods[i]);
                 names.Add(name);
                 _moduleProcessor.GatherModuleInfo(kmBombMods[i]);
@@ -259,51 +255,51 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         var pieces = new KeyValuePair<string, int>[]
         {
-            new KeyValuePair<string, int>("ZERO", 0),
-            new KeyValuePair<string, int>("ONE", 1),
-            new KeyValuePair<string, int>("TWO", 2),
-            new KeyValuePair<string, int>("THREE", 3),
-            new KeyValuePair<string, int>("FOUR", 4),
-            new KeyValuePair<string, int>("FIVE", 5),
-            new KeyValuePair<string, int>("SIX", 6),
-            new KeyValuePair<string, int>("SEVEN", 7),
-            new KeyValuePair<string, int>("EIGHT", 8),
-            new KeyValuePair<string, int>("NINE", 9),
-            new KeyValuePair<string, int>("TEN", 10),
-            new KeyValuePair<string, int>("ELEVEN", 11),
-            new KeyValuePair<string, int>("TWELVE", 12),
-            new KeyValuePair<string, int>("THIRTEEN", 13),
-            new KeyValuePair<string, int>("FOURTEEN", 14),
-            new KeyValuePair<string, int>("FIFTEEN", 15),
-            new KeyValuePair<string, int>("[MODULE] COUNT|NUMBER OF [MODULES]", BombInfo.GetModuleIDs().Count()),
+            new KeyValuePair<string, int>("zero", 0),
+            new KeyValuePair<string, int>("one", 1),
+            new KeyValuePair<string, int>("two", 2),
+            new KeyValuePair<string, int>("three", 3),
+            new KeyValuePair<string, int>("four", 4),
+            new KeyValuePair<string, int>("five", 5),
+            new KeyValuePair<string, int>("seven", 7),
+            new KeyValuePair<string, int>("six", 6),
+            new KeyValuePair<string, int>("eight", 8),
+            new KeyValuePair<string, int>("nine", 9),
+            new KeyValuePair<string, int>("ten", 10),
+            new KeyValuePair<string, int>("eleven", 11),
+            new KeyValuePair<string, int>("twelve", 12),
+            new KeyValuePair<string, int>("thirteen", 13),
+            new KeyValuePair<string, int>("fourteen", 14),
+            new KeyValuePair<string, int>("fifteen", 15),
+            new KeyValuePair<string, int>("[module] count|number of [modules]", BombInfo.GetModuleIDs().Count()),
             //distinct modules
             //unique modules
-            new KeyValuePair<string, int>("[[REGULAR] MODULE] COUNT|NUMBER OF [[REGULAR] MODULES]|[[NON-NEEDY] MODULE] COUNT|NUMBER OF [[NON-NEEDY] MODULES]", BombInfo.GetSolvableModuleIDs().Count()),
-            new KeyValuePair<string, int>("[[NEEDY] MODULE] COUNT|NUMBER OF [[NEEDY] MODULES]", BombInfo.GetModuleIDs().Count() - BombInfo.GetSolvableModuleIDs().Count()),
-            new KeyValuePair<string, int>("[BATTERY] COUNT|NUMBER OF [BATTERIES]", BombInfo.GetBatteryCount()),
-            new KeyValuePair<string, int>("[BATTERY HOLDER] COUNT|NUMBER OF [BATTERY HOLDERS]", BombInfo.GetBatteryHolderCount()),
-            new KeyValuePair<string, int>("[[AA] BATTERY] COUNT|NUMBER OF [[AA] BATTERIES]", BombInfo.GetBatteryCount(Battery.AA)),
-            new KeyValuePair<string, int>("[[D] BATTERY] COUNT|NUMBER OF [[D] BATTERIES]", BombInfo.GetBatteryCount(Battery.D)),
-            new KeyValuePair<string, int>("[INDICATOR] COUNT|NUMBER OF [INDICATORS]", BombInfo.GetIndicators().Count()),
-            new KeyValuePair<string, int>("[[LIT] INDICATOR] COUNT|NUMBER OF [[LIT] INDICATORS]", BombInfo.GetOnIndicators().Count()),
-            new KeyValuePair<string, int>("[[UNLIT] INDICATOR] COUNT|NUMBER OF [[UNLIT] INDICATORS]", BombInfo.GetOffIndicators().Count()),
+            new KeyValuePair<string, int>("[[regular] module] count|number of [[regular] modules]|[[non-needy] module] count|number of [[non-needy] modules]", BombInfo.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[[needy] module] count|number of [[needy] modules]", BombInfo.GetModuleIDs().Count() - BombInfo.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[battery] count|number of [batteries]", BombInfo.GetBatteryCount()),
+            new KeyValuePair<string, int>("[battery holder] count|number of [battery holders]", BombInfo.GetBatteryHolderCount()),
+            new KeyValuePair<string, int>("[[AA] battery] count|number of [[AA] batteries]", BombInfo.GetBatteryCount(Battery.AA)),
+            new KeyValuePair<string, int>("[[D] battery] count|number of [[D] batteries]", BombInfo.GetBatteryCount(Battery.D)),
+            new KeyValuePair<string, int>("[indicator] count|number of [indicators]", BombInfo.GetIndicators().Count()),
+            new KeyValuePair<string, int>("[[lit] indicator] count|number of [[lit] indicators]", BombInfo.GetOnIndicators().Count()),
+            new KeyValuePair<string, int>("[[unlit] indicator] count|number of [[unlit] indicators]", BombInfo.GetOffIndicators().Count()),
             //new KeyValuePair<string, int>("NUMBER OF [INDICATORS CONTAINING A VOWEL]", Bomb.GetIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //new KeyValuePair<string, int>("NUMBER OF [[LIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOnIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //new KeyValuePair<string, int>("NUMBER OF [[UNLIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOffIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //sum of characters in indicators
-            new KeyValuePair<string, int>("[PORT] COUNT|NUMBER OF [PORTS]", BombInfo.GetPortCount()),
-            new KeyValuePair<string, int>("[PORT PLATE] COUNT|NUMBER OF [PORT PLATES]", BombInfo.GetPortPlateCount()),
+            new KeyValuePair<string, int>("[port] count|number of [ports]", BombInfo.GetPortCount()),
+            new KeyValuePair<string, int>("[port plate] count|number of [port plates]", BombInfo.GetPortPlateCount()),
             //empty port plate count
             //non-empty port plate count
-            new KeyValuePair<string, int>("[[DVI-D] PORT] COUNT|NUMBER OF [[DVI-D] PORTS]", BombInfo.GetPortCount(Port.DVI)),
-            new KeyValuePair<string, int>("[[PARALLEL] PORT] COUNT|NUMBER OF [[PARALLEL] PORTS]", BombInfo.GetPortCount(Port.Parallel)),
-            new KeyValuePair<string, int>("[[PS/2] PORT] COUNT|NUMBER OF [[PS/2] PORTS]", BombInfo.GetPortCount(Port.PS2)),
-            new KeyValuePair<string, int>("[[RJ-45] PORT] COUNT|NUMBER OF [[RJ-45] PORTS]", BombInfo.GetPortCount(Port.RJ45)),
-            new KeyValuePair<string, int>("[[SERIAL] PORT] COUNT|NUMBER OF [[SERIAL] PORTS]", BombInfo.GetPortCount(Port.Serial)),
-            new KeyValuePair<string, int>("[[STEREO RCA] PORT] COUNT|NUMBER OF [[STEREO RCA] PORTS]", BombInfo.GetPortCount(Port.StereoRCA)),
-            new KeyValuePair<string, int>("[FIRST] SERIAL NUMBER [DIGIT]|[1ST] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[0]),
-            new KeyValuePair<string, int>("[SECOND] SERIAL NUMBER [DIGIT]|[2ND] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[1]),
-            new KeyValuePair<string, int>("[LAST] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[BombInfo.GetSerialNumberNumbers().ToArray().Count()-1]),
+            new KeyValuePair<string, int>("[[DVI-D] port] count|number of [[DVI-D] ports]", BombInfo.GetPortCount(Port.DVI)),
+            new KeyValuePair<string, int>("[[Parallel] port] count|number of [[Parallel] ports]", BombInfo.GetPortCount(Port.Parallel)),
+            new KeyValuePair<string, int>("[[PS/2] port] count|number of [[PS/2] ports]", BombInfo.GetPortCount(Port.PS2)),
+            new KeyValuePair<string, int>("[[RJ-45] port] count|number of [[RJ-45] ports]", BombInfo.GetPortCount(Port.RJ45)),
+            new KeyValuePair<string, int>("[[Serial] port] count|number of [[Serial] ports]", BombInfo.GetPortCount(Port.Serial)),
+            new KeyValuePair<string, int>("[[Stereo RCA] port] count|number of [[Stereo RCA] ports]", BombInfo.GetPortCount(Port.StereoRCA)),
+            new KeyValuePair<string, int>("[first] serial number [digit]|[1st] serial number [digit]", BombInfo.GetSerialNumberNumbers().ToArray()[0]),
+            new KeyValuePair<string, int>("[second] serial number [digit]|[2nd] serial number [digit]", BombInfo.GetSerialNumberNumbers().ToArray()[1]),
+            new KeyValuePair<string, int>("[last] serial number [digit]", BombInfo.GetSerialNumberNumbers().ToArray()[BombInfo.GetSerialNumberNumbers().ToArray().Count()-1]),
 
             // THIS DOESNT CURRENTLY CHECK FOR VOLTAGE
             // new KeyValuePair<string, int>("VOLTAGE", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
@@ -337,7 +333,7 @@ public class AllisonEckhartScript : MonoBehaviour
             var pickedPiece = candidates.PickRandom();
             bool negative = values.Sum() >= pickedPiece.Value && Rnd.Range(0, 2) == 1;
 
-            promptSoFar += " [" + (negative ? "MINUS" : "PLUS") + "] [" + pickedPiece.Text + "]";
+            promptSoFar += " [" + (negative ? "minus" : "plus") + "] [" + pickedPiece.Text + "]";
             values.Add(pickedPiece.Value * (negative ? -1 : 1));
             allisonEckhartsRemaining -= 1 + pickedPiece.Cost;
         }
@@ -420,7 +416,7 @@ public class AllisonEckhartScript : MonoBehaviour
         var root = ParseRevealSequence(prompt, null);
         var visible = new List<VisibleRevealNode> { new VisibleRevealNode(root) };
 
-        var microIterations = new List<string> { "ALLISON ECKHART" };
+        var microIterations = new List<string> { "Allison Eckhart" };
 
         while (visible.Any(v => !v.Node.IsLeaf))
         {
@@ -513,7 +509,7 @@ public class AllisonEckhartScript : MonoBehaviour
 
     private string RenderRevealGeneration(List<VisibleRevealNode> visible)
     {
-        return visible.Select(v => v.Node.Revealed ? v.Node.Text : "ALLISON ECKHART").ToArray().Join(" ");
+        return visible.Select(v => v.Node.Revealed ? v.Node.Text : "Allison Eckhart").ToArray().Join(" ");
     }
 
     private RevealNode ParseRevealSequence(string text, RevealGroup currentGroup)

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ModuleProcessor
 {
+    bool DebugFlag = true;
+
     public class AEModuleInfo
     {
         public string ModuleName;
@@ -40,15 +42,12 @@ public class ModuleProcessor
 
     public void SetTexts(bool setToAllisonEckhart)
     {
-        Debug.LogFormat("<> Setting {0} texts...", _aeModuleInfos.Count);
         if (setToAllisonEckhart)
         {
             foreach (var aeinfo in _aeModuleInfos)
             {
                 var tMesh = aeinfo.ModuleTextMesh;
-                Debug.Log("<>a" + tMesh.text);
                 tMesh.text = aeinfo.AEString;
-                Debug.Log("<>a" + tMesh.text);
                 tMesh.gameObject.transform.localScale = new Vector3(aeinfo.AEXScale, aeinfo.AEYScale, tMesh.gameObject.transform.localScale.z);
             }
         }
@@ -57,9 +56,7 @@ public class ModuleProcessor
             foreach (var aeinfo in _aeModuleInfos)
             {
                 var tMesh = aeinfo.ModuleTextMesh;
-                Debug.Log("<>b" + tMesh.text);
                 tMesh.text = aeinfo.OriginalString;
-                Debug.Log("<>b" + tMesh.text);
                 tMesh.gameObject.transform.localScale = new Vector3(aeinfo.OriginalXScale, aeinfo.OriginalYScale, tMesh.gameObject.transform.localScale.z);
             }
         }
@@ -69,7 +66,6 @@ public class ModuleProcessor
     {
         ModuleInfo info = Data.data[module.ModuleDisplayName];
         TextMesh[] usedMeshes = info.GetTextMeshes(module);
-        Debug.Log(module.ModuleDisplayName);
 
         switch (module.ModuleDisplayName)
         {
@@ -1462,15 +1458,12 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(module.ModuleDisplayName, usedMeshes[30], "ECKHART", 0.21f, 1f));
                 break;
             default:
-                /*
-                if (Application.isEditor)
+                if (DebugFlag)
                 {
                     for (int i = 0; i < usedMeshes.Length; i++)
                         _aeModuleInfos.Add(GetAEModuleInfo(module.ModuleDisplayName, usedMeshes[i], i.ToString(), 0.5f, 0.5f));
                 }
-				*/
                 break;
-
 
                 /*
                 //Unused =
