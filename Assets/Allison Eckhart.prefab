@@ -1553,7 +1553,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1251465212650432}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.01}
   m_LocalScale: {x: 0.0050000004, y: 0.005000004, z: 0.005000004}
   m_Children: []
   m_Father: {fileID: 4816780210216190}
@@ -2249,7 +2249,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 7a59188b42bc0cc4b974d3fe6edc1b00, type: 2}
+  - {fileID: 2100000, guid: 07da8e7fe660fae48bc8be7780dd8951, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4064,7 +4064,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1251465212650432}
-  m_Text: 
+  m_Text: 12345
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -4074,7 +4074,7 @@ TextMesh:
   m_FontSize: 256
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 9ee8c54419b49f040b993e903c15cacd, type: 3}
+  m_Font: {fileID: 12800000, guid: 02eb659d552846041a8e455a26f0937f, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -4199,10 +4199,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 121
+  m_FontSize: 112
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 02eb659d552846041a8e455a26f0937f, type: 3}
+  m_Font: {fileID: 12800000, guid: 2e09515f269042c4399cf97fbf7af32e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -5124,14 +5124,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Module: {fileID: 114943217843082284}
-  Bomb: {fileID: 114254322482168384}
+  BombInfo: {fileID: 114254322482168384}
   Audio: {fileID: 114960229496981458}
   ScreenText: {fileID: 102519900682491806}
   ScreenTextRenderer: {fileID: 23183197000056274}
   InputText: {fileID: 102179992241764704}
-  Clear: {fileID: 114274588428864144}
-  Submit: {fileID: 114234574297524002}
-  NumberButtons:
+  ClearSel: {fileID: 114274588428864144}
+  SubmitSel: {fileID: 114234574297524002}
+  NumberButtonSels:
   - {fileID: 114243024790145056}
   - {fileID: 114010396541946010}
   - {fileID: 114207648962380668}

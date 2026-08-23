@@ -1,4 +1,6 @@
 ﻿using KModkit;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,16 +9,16 @@ using Rnd = UnityEngine.Random;
 public class AllisonEckhartScript : MonoBehaviour
 {
     public KMBombModule Module;
-    public KMBombInfo Bomb;
+    public KMBombInfo BombInfo;
     public KMAudio Audio;
 
     public TextMesh ScreenText;
     public Renderer ScreenTextRenderer;
     public TextMesh InputText;
 
-    public KMSelectable Clear;
-    public KMSelectable Submit;
-    public KMSelectable[] NumberButtons;
+    public KMSelectable ClearSel;
+    public KMSelectable SubmitSel;
+    public KMSelectable[] NumberButtonSels;
 
     public int DebugNumber;
 
@@ -24,7 +26,7 @@ public class AllisonEckhartScript : MonoBehaviour
     private static int _moduleIdCounter = 1;
     private bool _moduleSolved;
 
-    private static readonly string[] _calcStarts = "INPUT,COMPUTE,CALCULATE,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
+    private static readonly string[] _calcStarts = "Input,Compute,Calculate,PUNCH IN,TYPE IN,DETERMINE,EVALUATE,QUANTIFY".Split(',');
 
     private static bool _alreadyRan = false;
     private static List<KMBombModule> _foundMods = new List<KMBombModule>();
@@ -35,47 +37,196 @@ public class AllisonEckhartScript : MonoBehaviour
 
     private int _solves;
     private string _mostRecent;
-    private readonly List<string> _solveList = new List<string>();
+    private readonly List<string> _currentSolves = new List<string>();
+
+    private readonly ModuleProcessor _moduleProcessor = new ModuleProcessor();
+
+    private class AllisonEckhartScriptInfo
+    {
+        public List<AllisonEckhartScript> AllisonEckhartModules = new List<AllisonEckhartScript>();
+        public bool ModulesAreAllsionEckharted;
+    }
+    private static readonly Dictionary<string, AllisonEckhartScriptInfo> _infos = new Dictionary<string, AllisonEckhartScriptInfo>();
+    private AllisonEckhartScriptInfo _info;
+    private int _moduleIx;
+    private string[] _allisonEckhartifiableModuleNames;
+
+    private string _input = "";
 
     private void Start()
     {
         _moduleId = _moduleIdCounter++;
-        Clear.OnInteract += delegate () { ClearPress(); return false; };
 
-        GenerateAllisonEckhart();
 
-        var textToDisplay = _promptIterations[0];
-        WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
+        for (int i = 0; i < NumberButtonSels.Length; i++)
+            NumberButtonSels[i].OnInteract += NumberButtonPress(i);
+        ClearSel.OnInteract += ClearPress;
+        SubmitSel.OnInteract += SubmitPress;
+
+        var sn = BombInfo.GetSerialNumber();
+        if (!_infos.ContainsKey(sn))
+            _infos[sn] = new AllisonEckhartScriptInfo();
+        _infos[sn].ModulesAreAllsionEckharted = true;
+        _info = _infos[sn];
+        _info.AllisonEckhartModules.Add(this);
+
+        StartCoroutine(Setup());
+
+        InputText.text = "";
+    }
+
+    private KMSelectable.OnInteractHandler NumberButtonPress(int i)
+    {
+        return delegate ()
+        {
+            if (_moduleSolved)
+                return false;
+            _input += i.ToString();
+            InputText.text = _input;
+            return false;
+        };
+    }
+
+    private bool ClearPress()
+    {
+        if (_moduleSolved)
+            return false;
+        _input = "";
+        InputText.text = _input;
+        return false;
+    }
+
+    private bool SubmitPress()
+    {
+        if (_moduleSolved)
+            return false;
+
+        int inputNum;
+        Debug.LogFormat("[Allison Eckhart #{0}] Inputted {1}.", _moduleId, _input);
+        if (int.TryParse(_input, out inputNum))
+        {
+            if (_solution == inputNum)
+            {
+                Debug.LogFormat("[Allison Eckhart #{0}] Module solved!", _moduleId);
+                Module.HandlePass();
+                _moduleSolved = true;
+
+                // TEMPORARY
+                _moduleProcessor.SetTexts(false);
+            }
+            else
+            {
+                Debug.LogFormat("[Allison Eckhart #{0}] Strike.", _moduleId);
+                Module.HandleStrike();
+            }
+            return false;
+        }
+        else
+        {
+            Debug.LogFormat("[Allison Eckhart #{0}] Strike.", _moduleId);
+            Module.HandleStrike();
+            return false;
+        }
     }
 
     private void Update()
     {
-        if (!_moduleSolved)
-        {
-            _solves = Bomb.GetSolvedModuleIDs().Count();
-            if (_solves > _solveList.Count())
-            {
-                _mostRecent = GetLatestSolve(Bomb.GetSolvedModuleIDs(), _solveList);
-                if (true /*_foundMods.Contains(MostRecent)*/)
-                {
+        if (_moduleSolved)
+            return;
 
-                }
+        var solvedModules = BombInfo.GetSolvedModuleNames();
+        if (solvedModules.Count == 0)
+            return;
+
+        if (_currentSolves.Count != solvedModules.Count)
+        {
+            solvedModules = BombInfo.GetSolvedModuleNames();
+            var lastSolved = GetLastSolve(solvedModules, _currentSolves);
+            if (_allisonEckhartifiableModuleNames.Contains(lastSolved))
+            {
+                Debug.LogFormat("[Allison Eckhart #{0}] {1} has been solved! Adjusting phrase...", _moduleId, lastSolved);
+                _solvedAllisonEckhartedModules++;
+                var textToDisplay = _promptIterations[_solvedAllisonEckhartedModules];
+                WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
             }
         }
     }
 
-    void ClearPress()
+    private IEnumerator Setup()
     {
-        if (Application.isEditor)
+        yield return null;
+        Debug.LogFormat("<Allison Eckhart #{0}> Gathering info...", _moduleId);
+        GatherInfo();
+
+        yield return null;
+        // Allison-Eckhart-ify all the modules
+        _moduleProcessor.SetTexts(true);
+
+        yield return null;
+        Debug.LogFormat("<Allison Eckhart #{0}> Generating prompt with {1} modules...", _moduleId, _foundMods.Count);
+        GeneratePrompt(Application.isEditor ? DebugNumber : _foundMods.Count);
+
+        yield return null;
+        var textToDisplay = _promptIterations[0];
+        WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
+    }
+
+    private string GetLastSolve(List<string> solved, List<string> cur)
+    {
+        for (int i = 0; i < cur.Count; i++)
+            solved.Remove(cur.ElementAt(i));
+        for (int i = 0; i < solved.Count; i++)
+            _currentSolves.Add(solved.ElementAt(i));
+        return solved.ElementAt(0);
+    }
+
+    private void OnDestroy()
+    {
+        _alreadyRan = false;
+        _foundMods = new List<KMBombModule>();
+    }
+
+    private void GatherInfo()
+    {
+        _moduleIx = _info.AllisonEckhartModules.IndexOf(this);
+        Debug.Log("<> " + _moduleIx);
+        if (_moduleIx != 0)
+            return;
+        Debug.Log("<> going");
+        string sn = BombInfo.GetSerialNumber();
+        var kmBombMods = FindObjectsOfType<KMBombModule>().Where(x => x.GetComponent<KMBombInfo>() != null && x.GetComponent<KMBombInfo>().GetSerialNumber() == sn).ToArray();
+        List<string> names = new List<string>();
+
+        for (int i = 0; i < kmBombMods.Length; i++)
         {
-            if (_solvedAllisonEckhartedModules >= _promptIterations.Count - 1)
-                return;
-
-            _solvedAllisonEckhartedModules++;
-            var textToDisplay = _promptIterations[_solvedAllisonEckhartedModules];
-
-            WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
+            string name = kmBombMods[i].ModuleDisplayName;
+            Debug.Log("<> name " + name);
+            if (Data.data.ContainsKey(name))
+            {
+                Debug.Log("<> added " + name);
+                _foundMods.Add(kmBombMods[i]);
+                names.Add(name);
+                _moduleProcessor.GatherModuleInfo(kmBombMods[i]);
+            }
         }
+        Debug.LogFormat("<Allison Eckhart #{0}> Found {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
+
+        _allisonEckhartifiableModuleNames = new string[_foundMods.Count];
+        for (int i = 0; i < _foundMods.Count; i++)
+            _allisonEckhartifiableModuleNames[i] = _foundMods[i].ModuleDisplayName;
+
+        /*
+        while (_foundMods.Count > 10) 
+        {
+            int modIndex = Rnd.Range(0, _foundMods.Count);
+            _foundMods.RemoveAt(modIndex);
+            names.RemoveAt(modIndex);
+        }
+        */
+
+        Debug.LogFormat("[Allison Eckhart #{0}] Possessing {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
+
+        //TODO(?): If multiple Allison Eckharts are present, divy up the supported modules among the Allison Eckharts.
     }
 
     public class AEPiece
@@ -106,7 +257,6 @@ public class AllisonEckhartScript : MonoBehaviour
 
     private void GeneratePrompt(int count)
     {
-
         var pieces = new KeyValuePair<string, int>[]
         {
             new KeyValuePair<string, int>("ZERO", 0),
@@ -125,35 +275,35 @@ public class AllisonEckhartScript : MonoBehaviour
             new KeyValuePair<string, int>("THIRTEEN", 13),
             new KeyValuePair<string, int>("FOURTEEN", 14),
             new KeyValuePair<string, int>("FIFTEEN", 15),
-            new KeyValuePair<string, int>("[MODULE] COUNT|NUMBER OF [MODULES]", Bomb.GetModuleIDs().Count()),
+            new KeyValuePair<string, int>("[MODULE] COUNT|NUMBER OF [MODULES]", BombInfo.GetModuleIDs().Count()),
             //distinct modules
             //unique modules
-            new KeyValuePair<string, int>("[[REGULAR] MODULE] COUNT|NUMBER OF [[REGULAR] MODULES]|[[NON-NEEDY] MODULE] COUNT|NUMBER OF [[NON-NEEDY] MODULES]", Bomb.GetSolvableModuleIDs().Count()),
-            new KeyValuePair<string, int>("[[NEEDY] MODULE] COUNT|NUMBER OF [[NEEDY] MODULES]", Bomb.GetModuleIDs().Count() - Bomb.GetSolvableModuleIDs().Count()),
-            new KeyValuePair<string, int>("[BATTERY] COUNT|NUMBER OF [BATTERIES]", Bomb.GetBatteryCount()),
-            new KeyValuePair<string, int>("[BATTERY HOLDER] COUNT|NUMBER OF [BATTERY HOLDERS]", Bomb.GetBatteryHolderCount()),
-            new KeyValuePair<string, int>("[[AA] BATTERY] COUNT|NUMBER OF [[AA] BATTERIES]", Bomb.GetBatteryCount(Battery.AA)),
-            new KeyValuePair<string, int>("[[D] BATTERY] COUNT|NUMBER OF [[D] BATTERIES]", Bomb.GetBatteryCount(Battery.D)),
-            new KeyValuePair<string, int>("[INDICATOR] COUNT|NUMBER OF [INDICATORS]", Bomb.GetIndicators().Count()),
-            new KeyValuePair<string, int>("[[LIT] INDICATOR] COUNT|NUMBER OF [[LIT] INDICATORS]", Bomb.GetOnIndicators().Count()),
-            new KeyValuePair<string, int>("[[UNLIT] INDICATOR] COUNT|NUMBER OF [[UNLIT] INDICATORS]", Bomb.GetOffIndicators().Count()),
+            new KeyValuePair<string, int>("[[REGULAR] MODULE] COUNT|NUMBER OF [[REGULAR] MODULES]|[[NON-NEEDY] MODULE] COUNT|NUMBER OF [[NON-NEEDY] MODULES]", BombInfo.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[[NEEDY] MODULE] COUNT|NUMBER OF [[NEEDY] MODULES]", BombInfo.GetModuleIDs().Count() - BombInfo.GetSolvableModuleIDs().Count()),
+            new KeyValuePair<string, int>("[BATTERY] COUNT|NUMBER OF [BATTERIES]", BombInfo.GetBatteryCount()),
+            new KeyValuePair<string, int>("[BATTERY HOLDER] COUNT|NUMBER OF [BATTERY HOLDERS]", BombInfo.GetBatteryHolderCount()),
+            new KeyValuePair<string, int>("[[AA] BATTERY] COUNT|NUMBER OF [[AA] BATTERIES]", BombInfo.GetBatteryCount(Battery.AA)),
+            new KeyValuePair<string, int>("[[D] BATTERY] COUNT|NUMBER OF [[D] BATTERIES]", BombInfo.GetBatteryCount(Battery.D)),
+            new KeyValuePair<string, int>("[INDICATOR] COUNT|NUMBER OF [INDICATORS]", BombInfo.GetIndicators().Count()),
+            new KeyValuePair<string, int>("[[LIT] INDICATOR] COUNT|NUMBER OF [[LIT] INDICATORS]", BombInfo.GetOnIndicators().Count()),
+            new KeyValuePair<string, int>("[[UNLIT] INDICATOR] COUNT|NUMBER OF [[UNLIT] INDICATORS]", BombInfo.GetOffIndicators().Count()),
             //new KeyValuePair<string, int>("NUMBER OF [INDICATORS CONTAINING A VOWEL]", Bomb.GetIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //new KeyValuePair<string, int>("NUMBER OF [[LIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOnIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //new KeyValuePair<string, int>("NUMBER OF [[UNLIT] INDICATORS CONTAINING A VOWEL]", Bomb.GetOffIndicators().Select(i => i.Intersect("AEIOU").Any())),
             //sum of characters in indicators
-            new KeyValuePair<string, int>("[PORT] COUNT|NUMBER OF [PORTS]", Bomb.GetPortCount()),
-            new KeyValuePair<string, int>("[PORT PLATE] COUNT|NUMBER OF [PORT PLATES]", Bomb.GetPortPlateCount()),
+            new KeyValuePair<string, int>("[PORT] COUNT|NUMBER OF [PORTS]", BombInfo.GetPortCount()),
+            new KeyValuePair<string, int>("[PORT PLATE] COUNT|NUMBER OF [PORT PLATES]", BombInfo.GetPortPlateCount()),
             //empty port plate count
             //non-empty port plate count
-            new KeyValuePair<string, int>("[[DVI-D] PORT] COUNT|NUMBER OF [[DVI-D] PORTS]", Bomb.GetPortCount(Port.DVI)),
-            new KeyValuePair<string, int>("[[PARALLEL] PORT] COUNT|NUMBER OF [[PARALLEL] PORTS]", Bomb.GetPortCount(Port.Parallel)),
-            new KeyValuePair<string, int>("[[PS/2] PORT] COUNT|NUMBER OF [[PS/2] PORTS]", Bomb.GetPortCount(Port.PS2)),
-            new KeyValuePair<string, int>("[[RJ-45] PORT] COUNT|NUMBER OF [[RJ-45] PORTS]", Bomb.GetPortCount(Port.RJ45)),
-            new KeyValuePair<string, int>("[[SERIAL] PORT] COUNT|NUMBER OF [[SERIAL] PORTS]", Bomb.GetPortCount(Port.Serial)),
-            new KeyValuePair<string, int>("[[STEREO RCA] PORT] COUNT|NUMBER OF [[STEREO RCA] PORTS]", Bomb.GetPortCount(Port.StereoRCA)),
-            new KeyValuePair<string, int>("[FIRST] SERIAL NUMBER [DIGIT]|[1ST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[0]),
-            new KeyValuePair<string, int>("[SECOND] SERIAL NUMBER [DIGIT]|[2ND] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[1]),
-            new KeyValuePair<string, int>("[LAST] SERIAL NUMBER [DIGIT]", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
+            new KeyValuePair<string, int>("[[DVI-D] PORT] COUNT|NUMBER OF [[DVI-D] PORTS]", BombInfo.GetPortCount(Port.DVI)),
+            new KeyValuePair<string, int>("[[PARALLEL] PORT] COUNT|NUMBER OF [[PARALLEL] PORTS]", BombInfo.GetPortCount(Port.Parallel)),
+            new KeyValuePair<string, int>("[[PS/2] PORT] COUNT|NUMBER OF [[PS/2] PORTS]", BombInfo.GetPortCount(Port.PS2)),
+            new KeyValuePair<string, int>("[[RJ-45] PORT] COUNT|NUMBER OF [[RJ-45] PORTS]", BombInfo.GetPortCount(Port.RJ45)),
+            new KeyValuePair<string, int>("[[SERIAL] PORT] COUNT|NUMBER OF [[SERIAL] PORTS]", BombInfo.GetPortCount(Port.Serial)),
+            new KeyValuePair<string, int>("[[STEREO RCA] PORT] COUNT|NUMBER OF [[STEREO RCA] PORTS]", BombInfo.GetPortCount(Port.StereoRCA)),
+            new KeyValuePair<string, int>("[FIRST] SERIAL NUMBER [DIGIT]|[1ST] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[0]),
+            new KeyValuePair<string, int>("[SECOND] SERIAL NUMBER [DIGIT]|[2ND] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[1]),
+            new KeyValuePair<string, int>("[LAST] SERIAL NUMBER [DIGIT]", BombInfo.GetSerialNumberNumbers().ToArray()[BombInfo.GetSerialNumberNumbers().ToArray().Count()-1]),
 
             // THIS DOESNT CURRENTLY CHECK FOR VOLTAGE
             // new KeyValuePair<string, int>("VOLTAGE", Bomb.GetSerialNumberNumbers().ToArray()[Bomb.GetSerialNumberNumbers().ToArray().Count()-1]),
@@ -442,54 +592,5 @@ public class AllisonEckhartScript : MonoBehaviour
         var left = MakeRevealBinaryTree(nodes.Take(midpoint).ToList());
         var right = MakeRevealBinaryTree(nodes.Skip(midpoint).ToList());
         return new RevealNode(left, right);
-    }
-
-    private void GenerateAllisonEckhart()
-    {
-        if (_alreadyRan)
-            return;
-        string sn = Bomb.GetSerialNumber();
-        KMBombModule[] mods = FindObjectsOfType<KMBombModule>().Where(x => x.GetComponent<KMBombInfo>() != null && x.GetComponent<KMBombInfo>().GetSerialNumber() == sn).ToArray();
-        List<string> names = new List<string> { };
-        for (int i = 0; i < mods.Length; i++)
-        {
-            string name = mods[i].ModuleDisplayName;
-            if (Data.data.ContainsKey(name))
-            {
-                _foundMods.Add(mods[i]);
-                names.Add(name);
-                ModuleProcessor.ProcessModule(mods[i]);
-            }
-        }
-        Debug.LogFormat("<Allison Eckhart #{0}> Found {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
-        /*
-        while (_foundMods.Count > 10) 
-        {
-            int modIndex = Rnd.Range(0, _foundMods.Count);
-            _foundMods.RemoveAt(modIndex);
-            names.RemoveAt(modIndex);
-        }
-        */
-        Debug.LogFormat("[Allison Eckhart #{0}] Possessing {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
-        //TODO(?): If multiple Allison Eckharts are present, divy up the supported modules among the Allison Eckharts.
-        GeneratePrompt(Application.isEditor ? DebugNumber : _foundMods.Count);
-        _alreadyRan = true;
-    }
-
-    private void OnDestroy()
-    {
-        _alreadyRan = false;
-        _foundMods = new List<KMBombModule>();
-    }
-
-    private string GetLatestSolve(List<string> a, List<string> b)
-    {
-        string z = "";
-        for (int i = 0; i < b.Count; i++)
-        {
-            a.Remove(b.ElementAt(i));
-        }
-        z = a.ElementAt(0);
-        return z;
     }
 }
