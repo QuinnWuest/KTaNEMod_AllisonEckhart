@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ModuleProcessor
 {
-    bool DebugFlag = true;
+    public bool DebugFlag = true;
 
     public class AEModuleInfo
     {

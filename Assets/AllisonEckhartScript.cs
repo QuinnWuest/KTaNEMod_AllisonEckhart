@@ -87,12 +87,22 @@ public class AllisonEckhartScript : MonoBehaviour
         };
     }
 
+    private bool _cockandballs = true;
+
     private bool ClearPress()
     {
         if (_moduleSolved)
             return false;
-        _input = "";
-        InputText.text = _input;
+        if (_moduleProcessor.DebugFlag)
+        {
+            _cockandballs = !_cockandballs;
+            _moduleProcessor.SetTexts(_cockandballs);
+        }
+        else
+        {
+            _input = "";
+            InputText.text = _input;
+        }
         return false;
     }
 
