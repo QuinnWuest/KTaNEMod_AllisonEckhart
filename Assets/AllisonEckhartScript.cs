@@ -1,5 +1,4 @@
 ﻿using KModkit;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +17,7 @@ public class AllisonEckhartScript : MonoBehaviour
 
     public KMSelectable ClearSel;
     public KMSelectable SubmitSel;
+    public KMSelectable DebugSel;
     public KMSelectable[] NumberButtonSels;
 
     public int DebugNumber;
@@ -45,6 +45,7 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         public List<AllisonEckhartScript> AllisonEckhartModules = new List<AllisonEckhartScript>();
         public bool ModulesAreAllsionEckharted;
+        public bool AllSolved { get { return AllisonEckhartModules.All(m => m._moduleSolved); } }
     }
     private static readonly Dictionary<string, AllisonEckhartScriptInfo> _infos = new Dictionary<string, AllisonEckhartScriptInfo>();
     private AllisonEckhartScriptInfo _info;
@@ -57,11 +58,14 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         _moduleId = _moduleIdCounter++;
 
-
         for (int i = 0; i < NumberButtonSels.Length; i++)
             NumberButtonSels[i].OnInteract += NumberButtonPress(i);
         ClearSel.OnInteract += ClearPress;
         SubmitSel.OnInteract += SubmitPress;
+        DebugSel.OnInteract += DebugPress;
+
+        if (!_moduleProcessor.DebugFlag)
+            DebugSel.gameObject.SetActive(false);
 
         var sn = BombInfo.GetSerialNumber();
         if (!_infos.ContainsKey(sn))
@@ -79,6 +83,8 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         return delegate ()
         {
+            NumberButtonSels[i].AddInteractionPunch(0.5f);
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, NumberButtonSels[i].transform);
             if (_moduleSolved)
                 return false;
             _input += i.ToString();
@@ -89,25 +95,32 @@ public class AllisonEckhartScript : MonoBehaviour
 
     private bool _cockandballs = true;
 
-    private bool ClearPress()
+    private bool DebugPress()
     {
+        DebugSel.AddInteractionPunch(0.5f);
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, DebugSel.transform);
         if (_moduleSolved)
             return false;
-        if (_moduleProcessor.DebugFlag)
-        {
-            _cockandballs = !_cockandballs;
-            _moduleProcessor.SetTexts(_cockandballs);
-        }
-        else
-        {
-            _input = "";
-            InputText.text = _input;
-        }
+        _cockandballs = !_cockandballs;
+        _moduleProcessor.SetTexts(_cockandballs);
+        return false;
+    }
+
+    private bool ClearPress()
+    {
+        ClearSel.AddInteractionPunch(0.5f);
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, ClearSel.transform);
+        if (_moduleSolved)
+            return false;
+        _input = "";
+        InputText.text = _input;
         return false;
     }
 
     private bool SubmitPress()
     {
+        SubmitSel.AddInteractionPunch(0.5f);
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, SubmitSel.transform);
         if (_moduleSolved)
             return false;
 
@@ -121,22 +134,14 @@ public class AllisonEckhartScript : MonoBehaviour
                 Module.HandlePass();
                 _moduleSolved = true;
 
-                // TEMPORARY
-                _moduleProcessor.SetTexts(false);
+                if (_info.AllSolved)
+                    _moduleProcessor.SetTexts(false);
+                return false;
             }
-            else
-            {
-                Debug.LogFormat("[Allison Eckhart #{0}] Strike.", _moduleId);
-                Module.HandleStrike();
-            }
-            return false;
         }
-        else
-        {
-            Debug.LogFormat("[Allison Eckhart #{0}] Strike.", _moduleId);
-            Module.HandleStrike();
-            return false;
-        }
+        Debug.LogFormat("[Allison Eckhart #{0}] Strike.", _moduleId);
+        Module.HandleStrike();
+        return false;
     }
 
     private void Update()
@@ -178,7 +183,10 @@ public class AllisonEckhartScript : MonoBehaviour
 
         yield return null;
         var textToDisplay = _promptIterations[0];
+        if (_foundMods.Count == 0)
+            textToDisplay = _promptIterations[1];
         WordWrapHelper.SetWordWrappedText(ref textToDisplay, ScreenText, ScreenTextRenderer, transform);
+
     }
 
     private string GetLastSolve(List<string> solved, List<string> cur)
@@ -194,6 +202,14 @@ public class AllisonEckhartScript : MonoBehaviour
     {
         _alreadyRan = false;
         _foundMods = new List<KMBombModule>();
+
+        if (_info != null)
+        {
+            _info.AllisonEckhartModules.Remove(this);
+
+            if (_info.AllisonEckhartModules.Count == 0)
+                _infos.Remove(BombInfo.GetSerialNumber());
+        }
     }
 
     private void GatherInfo()
@@ -230,9 +246,7 @@ public class AllisonEckhartScript : MonoBehaviour
         }
         */
 
-        Debug.LogFormat("[Allison Eckhart #{0}] Possessing {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
-
-        //TODO(?): If multiple Allison Eckharts are present, divy up the supported modules among the Allison Eckharts.
+        Debug.LogFormat("[Allison Eckhart #{0}] Contaminating {1} mods: {2}", _moduleId, _foundMods.Count, names.ToArray().Join("; "));
     }
 
     public class AEPiece
