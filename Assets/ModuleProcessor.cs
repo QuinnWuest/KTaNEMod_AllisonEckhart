@@ -72,6 +72,9 @@ public class ModuleProcessor
 
         switch (mod.ModuleDisplayName)
         {
+            case "The 1, 2, 3 Game":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ALLISON\nECKHART", 0.6f, 0.6f));
+                break;
             case "Astrology":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "POOR\nECKHART", 0.6f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "NO\nECKHART", 0.6f, 1f));
@@ -131,6 +134,10 @@ public class ModuleProcessor
                 break;
             case "Papa's Pizzeria":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\n\nECKHART", 1f, 1f));
+                break;
+            case "Prime Checker": //need to take a guess for technical reasons
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 0.8f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "NOT\nALLISON\nECKHART", 0.8f, 1f));
                 break;
             case "Poker":
             case "Not Poker":
@@ -1083,174 +1090,155 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ECKHART", 1f, 1f));
                 break;
-            case "Quote Crazy Talk End Quote":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Quote Crazy Talk End Quote": //updated since; ineffective
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "RGB Quiz":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 0.45f));
                 break;
-            case "Radiator":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[10], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ECKHART", 1f, 1f));
-                break;
-            case "Rain Hell":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Radiator": //not quite in the right spots
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[10], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ECKHART", 1f, 1f));
+            //    break;
             case "Rain":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+            case "Rain Hell":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 0.75f));
                 break;
-            case "ReGret-B Filtering":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "I", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "S", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "O", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "N", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[14], "E", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[15], "C", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "K", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[18], "H", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[19], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "R", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "T", 1f, 1f));
-                break;
-            case "ReGrettaBle Relay":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "I", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "S", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "O", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "N", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[14], "E", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[15], "C", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "K", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[18], "H", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[19], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "R", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "T", 1f, 1f));
-                break;
+            //case "ReGret-B Filtering": //keyboard case
+            //case "ReGrettaBle Relay":
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "A", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "L", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "L", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "I", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "S", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "O", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "N", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[14], "E", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[15], "C", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "K", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[18], "H", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[19], "A", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "R", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "T", 1f, 1f));
+            //    break;
             case "Reading Between the Lines":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLI", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "SON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECK", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "HART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLI", 0.67f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "SON", 0.73f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECK", 0.78f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "HART", 0.54f, 1f));
                 break;
-            case "Reformed Role Reversal":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
-                break;
-            case "Regular Hexpressions":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[10], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Reformed Role Reversal": //should be split in 4, not 2
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
+            //    break;
+            //case "Regular Hexpressions": //too fuckin' small for UE, current scale is an educated guess
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[10], "ALLISON\nECKHART", 0.5f, 0.9f));
+            //    break;
             case "Resistors":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 0.9f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.8f, 1f));
                 break;
-            case "Retirement":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 0.6f, 0.6f));
-                break;
+            //case "Retirement": //does not work fsr
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 0.6f, 0.6f));
+            //    break;
             case "Reverse Morse":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 0.48f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.48f, 1f));
                 break;
             case "Reverse Polish Notation":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[14], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "ALLISON", 0.63f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[14], "ECKHART", 0.58f, 1f));
                 break;
             case "Risky Wires":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
                 break;
             case "Robit Programming":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ALLISON\nECKHART", 1f, 0.43f));
                 break;
             case "Robot Programming":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 0.23f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.2f, 1f));
                 break;
             case "Roguelike Game":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ALLISON\nECKHART", 0.92f, 0.6f));
                 break;
             case "Role Reversal":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 0.4f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 0.37f, 1f));
                 break;
-            case "Rubik’s Clock":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
-                break;
-            case "SI-HTS":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON ECKHART", 1f, 1f));
+            //case "Rubik’s Clock": //wrong texts
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+            //    break;
+            case "SI-HTS": //this is a try, might not be right
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "Allison", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "Eckhart", 1f, 1f));
                 break;
             case "SQL - Basic":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 1f, 1f));
-                break;
             case "SQL - Cruel":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 1f, 1f));
-                break;
             case "SQL - Evil":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 0.6f, 1f));
                 break;
-            case "Scalar Dials":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[37], "ALLISON ECKHART", 1f, 1f));
+            case "Scalar Dials": //might be too funny
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[37], "Allison Eckhart", 0.3f, 1f));
                 break;
-            case "Schlag den Bomb":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[34], "ALLISON ECKHART", 1f, 1f));
+            case "Schlag den Bomb": 
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[34], "ALLISON\nECKHART", 0.25f, 0.5f));
                 break;
             case "Scipting":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[23], "ALLISON ECKHART", 1f, 1f));
                 break;
             case "Scratch-Off":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON ECKHART", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON ECKHART", 0.5f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON ECKHART", 0.5f, 1f));
                 break;
             case "Sequences":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "ALLISON", 0.5f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "ECKHART", 0.43f, 1f));
                 break;
-            case "Shapes and Bombs":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
-                break;
+            //case "Shapes and Bombs": //wrong meshes
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
+            //    break;
             case "Shell Game":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.36f, 0.66f));
                 break;
             case "Shifting Maze":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 1f, 1f));
+            case "Switching Maze":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 0.85f, 0.47f));
                 break;
             case "Shufflewords":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[25], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[25], "ALLISON\nECKHART", 0.36f, 0.84f));
                 break;
             case "Shut-the-Box":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 0.7f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 0.65f, 1f));
                 break;
-            case "Silly Slots":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Silly Slots": //lost cause probably
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Silo Autorization":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[34], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[35], "ECKHART", 1f, 1f));
                 break;
-            case "Simon Selects":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Simon Selects": //idek what's being replaced?
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Sink":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 0.45f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.4f, 1f));
                 break;
             case "Skewed Slots":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.5f, 0.5f));
                 break;
-            case "Skyrim":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ECKHART", 1f, 1f));
-                break;
-            case "Snack Attack":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Skyrim": //just Eckhart
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ECKHART", 1f, 1f));
+            //    break;
+            //case "Snack Attack": //doesn't work
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Sonic the Hedgehog":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.6f, 0.6f));
                 break;
@@ -1264,35 +1252,32 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "N\nT", 1f, 1f));
                 break;
             case "Spilling Paint":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "allison\neckhart", 0.06f, 0.3f));
                 break;
-            case "SpriteClub Betting Simulation":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[17], "ECKHART", 1f, 1f));
-                break;
+            //case "SpriteClub Betting Simulation": //unfunctional
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[17], "ECKHART", 1f, 1f));
+            //    break;
             case "Standard Button Masher":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 0.625f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 0.81f, 1f));
                 break;
-            case "Starmap Reconstruction":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
-                break;
-            case "State of Aggregation":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Starmap Reconstruction": //gonna be squished to shit
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
+            //    break;
+            //case "State of Aggregation": //at present, makes it unsolvable
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Subscribe to Pewdiepie":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 0.9f, 0.9f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ECKHART", 0.9f, 0.9f));
                 break;
             case "Subways":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON\nECKHART", 1f, 1f));
-                break;
-            case "Switching Maze":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON\nECKHART", 0.9f, 1f));
                 break;
             case "Symbolic Coordinates":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 0.59f));
                 break;
             case "Symbolic Password":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON ECKHART", 0.5f, 0.5f));
@@ -1301,11 +1286,11 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON\nECKHART", 1f, 1f));
                 break;
             case "Ternary Converter":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[8], "ALLISON", 0.75f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "ECKHART", 0.65f, 1f));
                 break;
             case "Ternary Tiles":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ALLISON\nECKHART", 1f, 0.53f));
                 break;
             case "Tesseractivity":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLI", 1f, 1f));
@@ -1314,24 +1299,24 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "HART", 1f, 1f));
                 break;
             case "Tetramorse":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON\nECKHART", 0.5f, 0.6f));
                 break;
             case "The Amber Button":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.2f, 0.25f));
                 break;
-            case "The Black Button":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "The Black Button": //dumb?
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "The Black Page":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON", 0.625f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ECKHART", 0.78f, 1f));
                 break;
-            case "The Calculator":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[22], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "The Calculator": //lost cause, maybe do the screen green instead?
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[22], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "The Code":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 0.46f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ECKHART", 0.37f, 1f));
                 break;
             case "The Colored Maze":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.7f, 0.6f));
@@ -1340,10 +1325,10 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 0.9f, 0.9f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 0.9f, 0.9f));
                 break;
-            case "The Door":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
-                break;
+            //case "The Door": //gonna be HELLA SQUISHED
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+            //    break;
             case "The Exploding Pen":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 1f, 1f));
                 break;
@@ -1370,28 +1355,28 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "♀", 1f, 1f)); //This was Tas' idea I'm nowhere near this clever --Blan
                 break;
             case "The Number Cipher":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[15], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[15], "ALLISON", 0.25f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[16], "ECKHART", 0.2f, 1f));
                 break;
             case "The Number":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 0.3f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ECKHART", 0.3f, 1f));
                 break;
             case "The Rule":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 0.5f, 0.5f));
                 break;
-            case "The Stock Market":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[17], "ALLISON\nECKHART", 1f, 1f));
-                break;
-            case "The Tile Maze":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[53], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[54], "ECKHART", 1f, 1f));
-                break;
+            //case "The Stock Market": //doesn't work
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[17], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
+            //case "The Tile Maze": //lost cause
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[53], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[54], "ECKHART", 1f, 1f));
+            //    break;
             case "The cRule":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 0.4f));
                 break;
             case "The Swan":
-				_aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ALLISON\nECKHART", 0.6f, 0.7f));
+				_aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ALLISON\nECKHART", 0.6f, 0.6f));
 				break;
             case "Timezone":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[13], "ALLISON\nECKHART", 1f, 1f));
@@ -1401,34 +1386,34 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.7f, 0.7f));
                 break;
             case "Topsy Turvy":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 0.3f, 0.3f));
                 break;
             case "Totally Accurate Minecraft Simulator":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 0.06f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.06f, 1f));
                 break;
             case "Touch Transmission":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.6f, 0.5f));
                 break;
-            case "Towers":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "ECKHART", 1f, 1f));
-                break;
+            //case "Towers": //how about, no.
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "ECKHART", 1f, 1f));
+            //    break;
             case "Training Text":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
                 break;
-            case "Transmitted Morse":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
-                break;
-            case "Tribal Council":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "Transmitted Morse":
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+            //    break;
+            //case "Tribal Council": //there's nowhere to put this i think
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Triple Term":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ALLISON\nECKHART", 0.8f, 0.7f));
                 break;
             case "Truchet Tiles":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.3f, 0.5f));
                 break;
             case "Turtle Robot":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
@@ -1437,33 +1422,33 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[11], "ALLISON", 0.7f, 0.7f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[12], "ECKHART", 0.7f, 0.7f));
                 break;
-            case "UIN(+L)":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[24], "ALLISON\nECKHART", 1f, 1f));
-                break;
-            case "Ultimate Cycle":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[19], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "L", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[22], "I", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[23], "S", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[24], "O", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[25], "N", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[28], "E", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[29], "C", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[30], "K", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[31], "H", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[32], "A", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[33], "R", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[34], "T", 1f, 1f));
-                break;
+            //case "UIN(+L)": //not looky right
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[24], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
+            //case "Ultimate Cycle": //keyboard uwu
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[19], "A", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[20], "L", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[21], "L", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[22], "I", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[23], "S", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[24], "O", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[25], "N", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[28], "E", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[29], "C", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[30], "K", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[31], "H", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[32], "A", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[33], "R", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[34], "T", 1f, 1f));
+            //    break;
             case "Ultralogic":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 0.9f, 1f));
                 break;
             case "Unicode":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 0.22f, 0.37f));
                 break;
             case "Unown Cipher":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "ALLISON\nECKHART", 0.7f, 0.34f));
                 break;
             case "Wack Game of Life":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
@@ -1476,22 +1461,22 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
                 break;
             case "Wolf, Goat, and Cabbage":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 0.5f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 0.6f, 1f));
                 break;
             case "Wonder Cipher":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON\nECKHART", 0.8f, 0.66f));
                 break;
-            case "eeB gnillepS":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
-                break;
-            case "Ángel Hernández":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
-                break;
-            case "ƎNA Cipher":
-                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
-                break;
+            //case "eeB gnillepS": //it'd be tiny as shit
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON", 1f, 1f));
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ECKHART", 1f, 1f));
+            //    break;
+            //case "Ángel Hernández": //why is there a display text??
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
+            //case "ƎNA Cipher": //no worky
+            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 1f));
+            //    break;
             case "Arithmetic Cipher":
             case "Blue Cipher":
             case "Blue Huffman Cipher":
