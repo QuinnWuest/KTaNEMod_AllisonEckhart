@@ -197,11 +197,11 @@ public class ModuleProcessor
             case "Adventure Game":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[7], "ALLISON\nECKHART", 0.428f, 0.625f));
                 break;
-            //case "Affine Cycle": //why this isn't working is beyond me :[
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "A * E + A = E", 1f, 1f));
-            //    for (int m = 10; m >= 19; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 20; m >= 35; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-20].ToString(), 1f, 1f)); }
-            //    break;
+            case "Affine Cycle":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "A * E + A = E", 1f, 1f));
+                for (int m = 10; m <= 19; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 20; m <= 35; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-20].ToString(), 1f, 1f)); }
+                break;
             case "Alchemy":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ECKHART", 1f, 1f));
@@ -244,10 +244,10 @@ public class ModuleProcessor
             case "Base-1":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[9], "ALLISON\nECKHART", 0.429f, 0.5f));
                 break;
-            //case "Basic Morse":
-            //    for (int m = 0; m >= 10; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 11; m >= 25; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON ECKHART"[m-11].ToString(), 1f, 1f)); }
-            //    break;
+            case "Basic Morse":
+                for (int m = 0; m <= 10; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 11; m <= 25; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON ECKHART"[m-11].ToString(), 1f, 1f)); }
+                break;
             case "Benedict Cumberbatch":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[26], "ALLISON\nECKHART", 0.833f, 0.448f));
                 break;
@@ -338,11 +338,11 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
                 break;
-            //case "Caesar Cycle": //???
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "A → E", 1f, 1f));
-            //    for (int m = 10; m >= 19; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 20; m >= 35; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-20].ToString(), 1f, 1f)); }
-            //    break;
+            case "Caesar Cycle":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "A → E", 1f, 1f));
+                for (int m = 10; m <= 19; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 20; m <= 35; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-20].ToString(), 1f, 1f)); }
+                break;
             case "Calculus":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "ALLISON\nECKHART", 1f, 1f));
                 break;
@@ -646,12 +646,12 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ALLISON", 0.47f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[6], "ECKHART", 0.47f, 1f));
                 break;
-            //case "Hill Cycle": //ok for loops break everything,
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "Allison", 0.4f, 1f));
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "Eckhart", 0.35f, 1f));
-            //    for (int m = 12; m >= 21; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 22; m >= 37; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-22].ToString(), 1f, 1f)); }
-            //    break;
+            case "Hill Cycle":
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "Allison", 0.4f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "Eckhart", 0.35f, 1f));
+                for (int m = 12; m <= 21; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 22; m <= 37; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-22].ToString(), 1f, 1f)); }
+                break;
             case "Hold On":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "Allison\nEckhart", 0.4f, 0.55f));
                 break;
@@ -698,14 +698,14 @@ public class ModuleProcessor
             case "Johnson Solids":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON ECKHART", 0.33f, 1f));
                 break;
-            //case "Jumble Cycle": //yea for loops are broken
-            //    for (int m = 0; m >= 5; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "AE", 1f, 1f)); }
-            //    for (int m = 15; m >= 24; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 25; m >= 31; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON"[m-25].ToString(), 1f, 1f)); }
-            //    for (int m = 34; m >= 40; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ECKHART"[m-34].ToString(), 1f, 1f)); }
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[32], "", 1f, 1f));
-            //    _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[33], "", 1f, 1f));
-            //    break;
+            case "Jumble Cycle":
+                for (int m = 0; m <= 5; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "AE", 1f, 1f)); }
+                for (int m = 15; m <= 24; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 25; m <= 31; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON"[m-25].ToString(), 1f, 1f)); }
+                for (int m = 34; m <= 40; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ECKHART"[m-34].ToString(), 1f, 1f)); }
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[32], "", 1f, 1f));
+                _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[33], "", 1f, 1f));
+                break;
             case "Kahoot!":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON ECKHART", 1f, 1f));
                 break;
@@ -815,10 +815,10 @@ public class ModuleProcessor
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON", 1f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ECKHART", 1f, 1f));
                 break;
-            //case "Modern Cipher": //fuck me dude
-            //    for (int m = 2; m >= 15; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISONECKHART"[m-2].ToString(), 1f, 1f)); }
-            //    for (int m = 16; m >= 27; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    break;
+            case "Modern Cipher":
+                for (int m = 2; m <= 15; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISONECKHART"[m-2].ToString(), 1f, 1f)); }
+                for (int m = 16; m <= 27; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                break;
             case "Modules Against Humanity":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[4], "ALLISON", 0.8f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[5], "ECKHART", 0.8f, 1f));
@@ -1006,10 +1006,10 @@ public class ModuleProcessor
             case "Rain Hell":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "ALLISON\nECKHART", 1f, 0.75f));
                 break;
-            //case "ReGret-B Filtering": //bork
-            //case "ReGrettaBle Relay":
-            //    for (int m = 6; m >= 21; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLI SONECK HART"[m-6].ToString(), 1f, 1f)); }
-            //    break;
+            case "ReGret-B Filtering": //bork
+            case "ReGrettaBle Relay":
+                for (int m = 6; m <= 21; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLI SONECK HART"[m-6].ToString(), 1f, 1f)); }
+                break;
             case "Reading Between the Lines":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[1], "ALLI", 0.67f, 1f));
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[2], "SON", 0.73f, 1f));
@@ -1303,10 +1303,10 @@ public class ModuleProcessor
             case "UIN(+L)":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[0], "Allison Eckhart", 0.77f, 1f));
                 break;
-            //case "Ultimate Cycle":
-            //    for (int m = 9; m >= 18; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
-            //    for (int m = 19; m >= 34; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-19].ToString(), 1f, 1f)); }
-            //    break;
+            case "Ultimate Cycle":
+                for (int m = 9; m <= 18; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "", 1f, 1f)); }
+                for (int m = 19; m <= 34; m++) { _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[m], "ALLISON  ECKHART"[m-19].ToString(), 1f, 1f)); }
+                break;
             case "Ultralogic":
                 _aeModuleInfos.Add(GetAEModuleInfo(mod.ModuleDisplayName, meshes[3], "ALLISON\nECKHART", 0.9f, 1f));
                 break;
